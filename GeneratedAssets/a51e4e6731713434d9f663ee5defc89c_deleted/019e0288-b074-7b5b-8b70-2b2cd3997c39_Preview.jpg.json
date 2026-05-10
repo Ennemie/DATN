@@ -1,0 +1,12 @@
+{
+    "asset": "a51e4e6731713434d9f663ee5defc89c",
+    "fileName": "019e0288-b074-7b5b-8b70-2b2cd3997c39_Preview.jpg",
+    "prompt": "swimming pool water material, dark blue night reflections, slight ripples, high quality seamless texture",
+    "negativePrompt": "",
+    "model": "realistic-textures-3-0",
+    "modelName": "Realistic Textures 3.0",
+    "customSeed": 413885545,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation"
+}

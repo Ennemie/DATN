@@ -1,0 +1,12 @@
+{
+    "asset": "630217b9a6a64ec41b356c938d8d69a5",
+    "fileName": "019e0288-b050-7636-adbf-814ea1d9f335_Preview.jpg",
+    "prompt": "modern luxury villa floor material, dark grey polished concrete with slight wet reflections, seamless, high quality tileable texture",
+    "negativePrompt": "",
+    "model": "realistic-textures-3-0",
+    "modelName": "Realistic Textures 3.0",
+    "customSeed": 320502435,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation"
+}

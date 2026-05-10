@@ -1,0 +1,14 @@
+The pack contains a Substance file (.SBSAR), which lets you export texture in the resolution of your choice, from 512 px to 8K, depending on your machine's capabilities.
+
+The included Substance (.SBSAR) file allows you to tweak multiple parameters to suit your needs:
+• Adjust wood color (HUE, contrast, brightness)
+• Modify wood grain variations (translation, rotation)
+• Control roughness and height details
+• Customize relief and normal map intensity
+
+To use these options and export your textures, you'll need Substance 3D Player, a free software provided by Adobe.
+
+Download Substance 3D Player here : 
+https://helpx.adobe.com/substance-3d-player.html
+
+Once installed, open the .SBSAR file in the software, adjust the settings as required, choose the desired resolution, and export the textures in the format that suits you.

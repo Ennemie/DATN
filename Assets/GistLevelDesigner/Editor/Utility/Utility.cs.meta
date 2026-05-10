@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 6e93d0e35f9ae454d9ca97c07e2b7974
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 177276
+  packageName: Gist Level Designer
+  packageVersion: 1.3.3
+  assetPath: Assets/GistLevelDesigner/Editor/Utility/Utility.cs
+  uploadId: 496510

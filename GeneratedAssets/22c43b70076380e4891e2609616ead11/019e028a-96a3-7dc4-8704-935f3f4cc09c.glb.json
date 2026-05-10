@@ -1,0 +1,23 @@
+{
+    "asset": "22c43b70076380e4891e2609616ead11",
+    "fileName": "019e028a-96a3-7dc4-8704-935f3f4cc09c.glb",
+    "prompt": "modern outdoor security camera, sleek design, black matte finish, wall mounted, low poly for game",
+    "negativePrompt": "",
+    "model": "model3d-tripo-p1",
+    "modelName": "Tripo P1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "6eff0d7f56044944a8fa004202c334b4",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}

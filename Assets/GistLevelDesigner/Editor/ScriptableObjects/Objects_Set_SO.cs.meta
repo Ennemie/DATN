@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: fd25d5ad3daeae74f8c238320172d9da
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 177276
+  packageName: Gist Level Designer
+  packageVersion: 1.3.3
+  assetPath: Assets/GistLevelDesigner/Editor/ScriptableObjects/Objects_Set_SO.cs
+  uploadId: 496510

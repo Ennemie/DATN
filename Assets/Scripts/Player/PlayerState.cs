@@ -6,8 +6,8 @@ public class PlayerState : MonoBehaviour
     public static PlayerState Instance { get; private set; }
     private Animator animator;
 
-    // 3 Trạng thái
-    public enum State { Idle, Running, Attack }
+    // 4 Trạng thái
+    public enum State { Idle, Running, Attack, Talking }
     private State _currentState = State.Idle;
 
     public State CurrentState
@@ -17,7 +17,7 @@ public class PlayerState : MonoBehaviour
         {
             if (_currentState == value) return;
             _currentState = value;
-            UpdateAnimation(); // Cập nhật khi đổi trạng thái
+            UpdateAnimation();
         }
     }
 
@@ -68,6 +68,11 @@ public class PlayerState : MonoBehaviour
             animator.CrossFade("Fist_Punch", 0.01f);
             StartCoroutine(ResetAttackState(1f));
         }
+        else if (state == State.Talking)
+        {
+            animator.CrossFade("Talk", 0.1f);
+            PlayerController.Instance.acceptInput = false;
+        }
     }
 
     private void PlayKnifeAnim(State state)
@@ -79,12 +84,22 @@ public class PlayerState : MonoBehaviour
             animator.CrossFade("Knife_Stab", 0.1f);
             StartCoroutine(ResetAttackState(1.3f));
         }
+        else if(state == State.Talking) 
+        {
+            animator.CrossFade("Knife_Idle", 0.1f);
+            PlayerController.Instance.acceptInput = false;
+        }
     }
 
     private void PlayPistolAnim(State state)
     {
         if (state == State.Idle) animator.CrossFade("Pistol_Idle", 0.1f);
         else if (state == State.Running) animator.CrossFade("Pistol_Running", 0.1f);
+        else if(state == State.Talking) 
+        {
+            animator.CrossFade("Pistol_Idle", 0.1f);
+            PlayerController.Instance.acceptInput = false;
+        }
     }
 
     private void PlayShotgunAnim(State state)
@@ -104,6 +119,12 @@ public class PlayerState : MonoBehaviour
             animator.CrossFade("Shotgun_Shoot", 0.01f);
             PlayerWeapon.Instance.UpdateShotgunAnimation("Shooting");
             StartCoroutine(ResetAttackState(1.1f));
+        }
+        else if(state == State.Talking)
+        {
+            animator.CrossFade("Shotgun_Idle", 0.1f);
+            PlayerWeapon.Instance.UpdateShotgunAnimation("Idle");
+            PlayerController.Instance.acceptInput = false;
         }
     }
 

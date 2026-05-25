@@ -1,0 +1,23 @@
+{
+    "asset": "498dfb89c3ee72f4786c50a382d7ba68",
+    "fileName": "019e5408-b093-75bd-b2e8-6fa21504d9a1.glb",
+    "prompt": "3D model of a classic multi-tiered stone fountain, matching the style and structure of the provided reference image. Elegant architectural design, weathered stone texture, realistic PBR material. Full structure.",
+    "negativePrompt": "",
+    "model": "model3d-tripo-p1",
+    "modelName": "Tripo P1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "29afd2906d8e8a04081e3b66f6265e61",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}

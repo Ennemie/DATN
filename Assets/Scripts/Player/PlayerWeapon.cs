@@ -85,6 +85,8 @@ public class PlayerWeapon : MonoBehaviour
                 shotgun_ShootingObj.SetActive(false);
                 break;
         }
+        PlayerState.Instance.UpdateAnimation();
+        PlayerCanvasController.Instance.UpdateWeaponIcons();
     }
     public void UpdateShotgunAnimation(string value)
     {

@@ -1,0 +1,177 @@
+/* Container nền bọc ngoài toàn màn hình - dùng Flexbox căn giữa Form */
+.screen-container {
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0); /* Trong suốt để lộ Canvas Background cũ phía sau */
+}
+
+/* Khung Panel thiết kế theo khối hộp cơ khí quân sự tối giản */
+.cyber-panel {
+    background-color: rgba(10, 12, 16, 0.93);
+    border-width: 1px;
+    border-color: rgba(100, 110, 125, 0.4);
+    border-radius: 0px; /* Góc vuông tuyệt đối tuyệt đối */
+    padding: 35px 40px;
+    width: 420px;
+    position: relative;
+}
+
+/* Thanh chỉ báo nhỏ màu vàng Volt định vị tại viền đỉnh Panel */
+.cyber-corner-decor {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 25px;
+    height: 3px;
+    background-color: #FACC15;
+}
+
+/* Cấu trúc thiết kế phần đầu tiêu đề (Header) */
+.panel-header {
+    margin-bottom: 25px;
+}
+
+.cyber-subtitle {
+    color: #FACC15;
+    font-size: 11px;
+    -unity-font-style: bold;
+    letter-spacing: 2px;
+    margin: 0;
+    padding: 0;
+}
+
+.cyber-title {
+    color: #FFFFFF;
+    font-size: 26px;
+    -unity-font-style: bold;
+    letter-spacing: 1px;
+    margin-top: 4px;
+}
+
+/* Cấu trúc phần thân (Body) và các Group nhập liệu */
+.panel-body {
+    margin-bottom: 15px;
+}
+
+.input-group {
+    margin-bottom: 18px;
+}
+
+.input-label {
+    color: #8A8A93;
+    font-size: 11px;
+    -unity-font-style: bold;
+    letter-spacing: 1.5px;
+    margin-bottom: 6px;
+}
+
+/* Style cho cấu trúc TextField - Đè các class nội bộ của Unity UI Toolkit */
+.cyber-textfield {
+    margin: 0;
+    padding: 0;
+}
+
+/* Định dạng trực tiếp ô Input bên trong TextField */
+.cyber-textfield > .unity-base-text-field__input {
+    background-color: #0B0D11;
+    border-width: 1px;
+    border-color: rgba(100, 110, 125, 0.5);
+    border-radius: 0px;
+    color: #FFFFFF;
+    padding: 10px 14px;
+    font-size: 13px;
+    /* Thiết lập chuyển động mượt mà cho thuộc tính viền */
+    transition-property: border-color, box-shadow;
+    transition-duration: 0.2s;
+}
+
+/* Trạng thái Hover: Khi di chuột qua ô TextField */
+.cyber-textfield:hover > .unity-base-text-field__input {
+    border-color: rgba(250, 204, 21, 0.6);
+}
+
+/* Trạng thái Focus: Khi người dùng nhấp chuột vào để nhập chữ -> Viền phát sáng Volt */
+.cyber-textfield:focus > .unity-base-text-field__input {
+    border-color: #FACC15;
+    box-shadow: 0 0 8px rgba(250, 204, 21, 0.35); /* Đổ bóng phát sáng viền nhẹ */
+}
+
+/* Đường liên kết phụ Quên Access Key */
+.cyber-link-sub {
+    color: #8A8A93;
+    font-size: 11px;
+    -unity-font-style: bold;
+    align-self: flex-end;
+    margin-top: -4px;
+    transition-property: color;
+    transition-duration: 0.2s;
+}
+
+.cyber-link-sub:hover {
+    color: #FACC15;
+}
+
+/* NÚT BẤM CHÍNH (PRIMARY BUTTON): Vàng Volt tương phản gắt trên chữ Đen */
+.cyber-btn-primary {
+    background-color: #FACC15;
+    border-width: 0px;
+    border-radius: 0px;
+    color: #000000;
+    -unity-font-style: bold;
+    font-size: 14px;
+    letter-spacing: 1.5px;
+    padding: 14px 0px;
+    margin-top: 15px;
+    margin-bottom: 20px;
+    transition-property: background-color, box-shadow, border-color, border-width;
+    transition-duration: 0.2s;
+}
+
+/* Khi di chuột vào nút bấm chính: Sáng màu hơn */
+.cyber-btn-primary:hover {
+    background-color: #ffe51c;
+}
+
+/* Khi click đè nút: Sậm màu tạo cảm giác lún */
+.cyber-btn-primary:active {
+    background-color: #EAB308;
+}
+
+/* Khi focus bằng phím/Gamepad: Viền trắng và quầng sáng vàng */
+.cyber-btn-primary:focus {
+    box-shadow: 0 0 10px rgba(250, 204, 21, 0.6);
+}
+
+/* Footer điều hướng chuyển đổi giữa Login và Register */
+.switch-mode-container {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.text-muted {
+    color: #52525B;
+    font-size: 12px;
+}
+
+.cyber-btn-link {
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0px;
+    color: #FACC15;
+    font-size: 12px;
+    -unity-font-style: bold;
+    margin-left: 5px;
+    padding: 0;
+    transition-property: color;
+    transition-duration: 0.2s;
+}
+
+.cyber-btn-link:hover {
+    color: #FFFFFF;
+}
+.hide-form {
+    display: none !important;
+}

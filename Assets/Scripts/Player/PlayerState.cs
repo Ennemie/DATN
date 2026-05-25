@@ -93,7 +93,7 @@ public class PlayerState : MonoBehaviour
 
     private void PlayPistolAnim(State state)
     {
-        if (state == State.Idle) animator.CrossFade("Pistol_Idle", 0.1f);
+        if (state == State.Idle) animator.CrossFade("Pistol_Idle", 0.05f);
         else if (state == State.Running) animator.CrossFade("Pistol_Running", 0.1f);
         else if(state == State.Talking) 
         {

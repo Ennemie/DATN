@@ -19,7 +19,6 @@ public class PlayerController : MonoBehaviour
     // Attack
     [HideInInspector] public bool isAttacking = false;
     private bool isReadyToAttack = true;
-    private int weaponIndex = 0;
 
     // Interact
     private InteractController interactProp = null;
@@ -48,6 +47,7 @@ public class PlayerController : MonoBehaviour
     }
     public void OnAttackInput(InputAction.CallbackContext context)
     {
+        if(EventSystem.current.IsPointerOverGameObject()) return;
         if (context.performed && isReadyToAttack && acceptInput)
         {
                 isAttacking = true;
@@ -68,6 +68,7 @@ public class PlayerController : MonoBehaviour
             if (interactProp.interactType == InteractController.InteractType.Door) interactProp.DoorInteract();
             if (interactProp.interactType == InteractController.InteractType.Commander)
             {
+                PlayerCanvasController.Instance.ChangeToFist();
                 interactProp.CommanderTalk();
                 LookAtNPC(interactProp);
                 PlayerState.Instance.CurrentState = PlayerState.State.Talking;
@@ -76,15 +77,22 @@ public class PlayerController : MonoBehaviour
     }
     public void OnWeaponChangeInput(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.started)
         {
-            weaponIndex = (weaponIndex + 1) % 4; // Giả sử có 4 vũ khí
-            PlayerWeapon.WeaponType newWeapon = (PlayerWeapon.WeaponType)weaponIndex;
-            PlayerWeapon.Instance.ChangeWeapon(newWeapon);
-            PlayerState.Instance.UpdateAnimation();
+            PlayerCanvasController.Instance.ShowWeaponsHubOnMouse(Mouse.current.position.ReadValue());
+        }
+        if(context.canceled)
+        {
+            PlayerCanvasController.Instance.RepositionWeaponsHub();
         }
     }
-
+    public void OnInventorySwitch(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            PlayerCanvasController.Instance.ToggleInventory();
+        }
+    }
     void FixedUpdate()
     {
         moveDirection = new Vector3(inputVector.x, 0, inputVector.y);

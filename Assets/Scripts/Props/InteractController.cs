@@ -12,6 +12,7 @@ public class InteractController : MonoBehaviour
     public InteractType interactType;
     private GameObject canvas;
     private TMP_Text message;
+    [SerializeField]private ConversationController conversationBox;
     [SerializeField] private string startMessage;
     [SerializeField] private string endMessage;
     void Start()
@@ -20,6 +21,7 @@ public class InteractController : MonoBehaviour
         message = canvas.GetComponentInChildren<TMP_Text>();
         message.text = startMessage;
         canvas.SetActive(false);
+        if(conversationBox != null ) conversationBox.EnableConversationBox(false);
     }
     public void DoorInteract()
     {
@@ -52,7 +54,9 @@ public class InteractController : MonoBehaviour
         else
         {
             CommanderController.Instance.LookAtPlayer();
+            CommanderController.Instance.state = CommanderController.State.Talking;
         }
+        conversationBox.EnableConversationBox(true);
     }
     public void ShowMessage()
     {

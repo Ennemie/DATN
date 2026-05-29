@@ -1125,15 +1125,38 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   currentNPC: 1
-  name: {fileID: 1128532273}
+  npcNameText: {fileID: 1128532273}
   conversationLine: {fileID: 233447312}
   conversationLines:
   - name: Commander Victor Hale
-    conversationLine: "Xin ch\xE0o Agent 969!"
+    conversationLine: "Agent 969\u2026 cu\u1ED1i c\xF9ng c\u1EADu c\u0169ng \u0111\u1EBFn."
   - name: Agent 969
-    conversationLine: "Xin ch\xE0o Commander!"
+    conversationLine: "T\xF4i \u0111\xE3 s\u1EB5n s\xE0ng cho nhi\u1EC7m v\u1EE5
+      \u0111\u1EA7u ti\xEAn, th\u01B0a ch\u1EC9 huy."
   - name: Commander Victor Hale
-    conversationLine: Goodbye!
+    conversationLine: "\u0110\u1EEBng qu\xE1 t\u1EF1 tin. \u0110\xE2y kh\xF4ng ph\u1EA3i
+      b\xE0i ki\u1EC3m tra hu\u1EA5n luy\u1EC7n n\u1EEFa."
+  - name: Commander Victor Hale
+    conversationLine: "Damien Crowe \u0111ang x\xE2y d\u1EF1ng m\u1ED9t m\u1EA1ng
+      l\u01B0\u1EDBi v\u0169 kh\xED c\xF3 th\u1EC3 ch\xE2m ng\xF2i chi\u1EBFn tranh
+      to\xE0n c\u1EA7u."
+  - name: Agent 969
+    conversationLine: "M\u1EE5c ti\xEAu c\u1EE7a t\xF4i l\xE0 g\xEC?"
+  - name: Commander Victor Hale
+    conversationLine: "M\u1ED9t bi\u1EC7t th\u1EF1 \u1EDF ngo\u1EA1i \xF4 Raven Hill."
+  - name: Commander Victor Hale
+    conversationLine: "Ch\xFAng ta tin r\u1EB1ng b\xEAn trong c\xF3 keycard d\u1EABn
+      t\u1EDBi c\u01A1 s\u1EDF b\xED m\u1EADt \u0111\u1EA7u ti\xEAn c\u1EE7a h\u1EAFn."
+  - name: Commander Victor Hale
+    conversationLine: "\u0110\u1ED9t nh\u1EADp, l\u1EA5y keycard v\xE0 r\xFAt lui?"
+  - name: Commander Victor Hale
+    conversationLine: "Ch\xEDnh x\xE1c."
+  - name: Commander Victor Hale
+    conversationLine: "Kh\xF4ng g\xE2y b\xE1o \u0111\u1ED9ng n\u1EBFu c\xF3 th\u1EC3.
+      \u0110\xE2y l\xE0 nhi\u1EC7m v\u1EE5 th\u1EF1c \u0111\u1ECBa \u0111\u1EA7u
+      ti\xEAn c\u1EE7a c\u1EADu, 969."
+  - name: Agent 969
+    conversationLine: "...\u0110\xE3 r\xF5, th\u01B0a ch\u1EC9 huy!"
 --- !u!114 &258767978
 MonoBehaviour:
   m_ObjectHideFlags: 0

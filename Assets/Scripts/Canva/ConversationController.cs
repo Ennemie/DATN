@@ -14,11 +14,12 @@ public class ConversationController : MonoBehaviour
         None,
         Commander
     }
-    [SerializeField] private TMP_Text name;
+    [SerializeField] private TMP_Text npcNameText;
     [SerializeField] private TMP_Text conversationLine;
     private int conversationIndex;
 
     [SerializeField] private List<ConversationStruct> conversationLines;
+    private Coroutine conversationCoroutine;
 
     public void EnableConversationBox(bool enable)
     {
@@ -31,11 +32,13 @@ public class ConversationController : MonoBehaviour
     }
     void OnEnable()
     {
+        PlayerCanvasController.Instance.Enable(false);
         conversationIndex = 0;
         DisplayConversationLine(conversationIndex);
     }
-    private void OnDisable()
+    void OnDisable()
     {
+        PlayerCanvasController.Instance.Enable(true);
         PlayerState.Instance.CurrentState = PlayerState.State.Idle;
         PlayerController.Instance.acceptInput = true;
 
@@ -47,6 +50,7 @@ public class ConversationController : MonoBehaviour
     public void NextConversationLine()
     {
         conversationIndex++;
+        StopCoroutine(conversationCoroutine);
         DisplayConversationLine(conversationIndex);
     }
     private void DisplayConversationLine(int index)
@@ -57,9 +61,15 @@ public class ConversationController : MonoBehaviour
         }
         else
         {
-            name.text = conversationLines[index].name;
+            npcNameText.text = conversationLines[index].name;
             conversationLine.text = conversationLines[index].conversationLine;
+            conversationCoroutine = StartCoroutine(WaitToNextLine(3f));
         }
+    }
+    private IEnumerator WaitToNextLine(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        NextConversationLine();
     }
     private IEnumerator WaitToClose(float seconds)
     {

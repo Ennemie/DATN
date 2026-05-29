@@ -27,11 +27,13 @@ namespace Synty.Interface.MilitaryCombatHUD.Samples
 
         private void GetSliders()
         {
-#if UNITY_2022_1_OR_NEWER
+        #if UNITY_6000_0_OR_NEWER
+            sliders = FindObjectsByType<Slider>(FindObjectsInactive.Exclude).ToList();
+        #elif UNITY_2022_1_OR_NEWER
             sliders = FindObjectsByType<Slider>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).ToList();
-#else
+        #else
             sliders = FindObjectsOfType<Slider>().ToList();
-#endif
+        #endif
         }
 
         private void Reset()

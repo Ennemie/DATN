@@ -126,4 +126,8 @@ public class PlayerCanvasController : MonoBehaviour
             item.SetActive(false);
         }
     }
+    public void Enable(bool enabled)
+    {
+        gameObject.SetActive(enabled);
+    }
 }

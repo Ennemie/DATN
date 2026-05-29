@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 
@@ -299,13 +299,16 @@ namespace Michsky.UI.MTP
 
         Canvas FindCanvas()
         {
-#if UNITY_2023_2_OR_NEWER
+        #if UNITY_6000_0_OR_NEWER
+            Canvas[] canvases = FindObjectsByType<Canvas>(FindObjectsInactive.Exclude);
+            return canvases.Length > 0 ? canvases[0] : null;
+        #elif UNITY_2023_2_OR_NEWER
             Canvas[] canvases = FindObjectsByType<Canvas>(FindObjectsSortMode.None);
             return canvases.Length > 0 ? canvases[0] : null;
-#else
+        #else
             Canvas[] canvases = FindObjectsOfType<Canvas>();
             return canvases.Length > 0 ? canvases[0] : null;
-#endif
+        #endif
         }
     }
 }

@@ -58,6 +58,11 @@ public class InteractController : MonoBehaviour
         }
         conversationBox.EnableConversationBox(true);
     }
+    public void NextLineConversation()
+    {
+        if(conversationBox == null) return;
+        conversationBox.NextConversationLine();
+    }
     public void ShowMessage()
     {
         canvas.SetActive(true);

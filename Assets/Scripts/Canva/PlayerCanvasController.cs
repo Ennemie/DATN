@@ -16,7 +16,8 @@ public class PlayerCanvasController : MonoBehaviour
     [SerializeField] private RawImage knifeIcon;
     [SerializeField] private RawImage pistolIcon;
     [SerializeField] private RawImage shotgunIcon;
-    private Color iconColor = Color.yellow;
+    private string colorHex = "#00AEEF";
+    private Color iconColor;
     private Vector2 weaponsHubOGPos;
 
     // Inventory
@@ -26,6 +27,7 @@ public class PlayerCanvasController : MonoBehaviour
 
     void Awake()
     {
+        iconColor = ColorUtility.TryParseHtmlString(colorHex, out Color color) ? color : Color.white;
         if (Instance == null)
         {
             Instance = this;

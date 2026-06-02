@@ -5,6 +5,8 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 using DG.Tweening;
+using Unity.AppUI.UI;
+using DG.Tweening.Core;
 
 public class ConversationController : MonoBehaviour
 {
@@ -14,6 +16,15 @@ public class ConversationController : MonoBehaviour
         None,
         Commander
     }
+
+    private Vector2 leftBtnOriginalPos = new Vector2(0, -165.5f);
+    private Vector2 leftBtnTargetPos = new Vector2(-235f, -165.5f);
+    private Vector2 rightBtnOriginalPos = new Vector2(0, -165.5f);
+    private Vector2 rightBtnTargetPos = new Vector2(235f, -165.5f);
+
+    [SerializeField] private RectTransform leftBtn;
+    [SerializeField] private RectTransform rightBtn;
+    [SerializeField] private CanvasGroup lineBox;
     [SerializeField] private TMP_Text npcNameText;
     [SerializeField] private TMP_Text conversationLine;
     private int conversationIndex;
@@ -28,13 +39,13 @@ public class ConversationController : MonoBehaviour
     public void EndConversation()
     {
         DisplayConversationLine(conversationLines.Count - 1);
-        StartCoroutine(WaitToClose(1f));
+        StartCoroutine(WaitToClose(1.5f));
     }
     void OnEnable()
     {
         PlayerCanvasController.Instance.Enable(false);
         conversationIndex = 0;
-        DisplayConversationLine(conversationIndex);
+        ShowConversationBox(true);
     }
     void OnDisable()
     {
@@ -57,7 +68,7 @@ public class ConversationController : MonoBehaviour
     {
         if (index >= conversationLines.Count)
         {
-            gameObject.SetActive(false);
+            ShowConversationBox(false);
         }
         else
         {
@@ -74,6 +85,26 @@ public class ConversationController : MonoBehaviour
     private IEnumerator WaitToClose(float seconds)
     {
         yield return new WaitForSeconds(seconds);
-        gameObject.SetActive(false);
+        ShowConversationBox(false);
+    }
+    private void ShowConversationBox(bool show)
+    {
+        if (show)
+        {
+            leftBtn.anchoredPosition = leftBtnOriginalPos;
+            rightBtn.anchoredPosition = rightBtnOriginalPos;
+            lineBox.alpha = 0;
+
+            DisplayConversationLine(conversationIndex);
+            leftBtn.DOAnchorPos(leftBtnTargetPos, 1).SetEase(Ease.OutBack);
+            rightBtn.DOAnchorPos(rightBtnTargetPos, 1).SetEase(Ease.OutBack);
+            lineBox.DOFade(1, 1f);
+        }
+        else
+        {
+            leftBtn.DOAnchorPos(leftBtnOriginalPos, 0.5f).SetEase(Ease.InBack);
+            rightBtn.DOAnchorPos(rightBtnOriginalPos, 0.5f).SetEase(Ease.InBack);
+            lineBox.DOFade(0, 0.5f).OnComplete(() => gameObject.SetActive(false));
+        }
     }
 }

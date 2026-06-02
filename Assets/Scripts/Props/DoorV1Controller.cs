@@ -58,14 +58,6 @@ public class DoorV1Controller : MonoBehaviour
         doorObj.transform.localPosition = Vector3.Lerp(doorObj.transform.localPosition, targetPos, Time.fixedDeltaTime * speed);
         doorObj.transform.localRotation = Quaternion.Lerp(doorObj.transform.localRotation, targetRot, Time.fixedDeltaTime * speed);
     }
-    private void Update()
-    {
-        if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
-        {
-            isOpen = !isOpen;
-        }
-
-    }
     private void OpenDoor()
     {
         targetPos = openPos;

@@ -75,6 +75,14 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+    public void OnNextLineConversation(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            if (interactProp == null) return;
+            interactProp.NextLineConversation();
+        }
+    }
     public void OnWeaponChangeInput(InputAction.CallbackContext context)
     {
         if (context.started)

@@ -30,6 +30,7 @@ public class ConversationController : MonoBehaviour
     private int conversationIndex;
 
     [SerializeField] private List<ConversationStruct> conversationLines;
+    private Coroutine conversationCoroutine;
 
     public void EnableConversationBox(bool enable)
     {
@@ -42,11 +43,13 @@ public class ConversationController : MonoBehaviour
     }
     void OnEnable()
     {
+        PlayerCanvasController.Instance.Enable(false);
         conversationIndex = 0;
         ShowConversationBox(true);
     }
     void OnDisable()
     {
+        PlayerCanvasController.Instance.Enable(true);
         PlayerState.Instance.CurrentState = PlayerState.State.Idle;
         PlayerController.Instance.acceptInput = true;
 
@@ -58,6 +61,7 @@ public class ConversationController : MonoBehaviour
     public void NextConversationLine()
     {
         conversationIndex++;
+        StopCoroutine(conversationCoroutine);
         DisplayConversationLine(conversationIndex);
     }
     private void DisplayConversationLine(int index)
@@ -70,7 +74,13 @@ public class ConversationController : MonoBehaviour
         {
             npcNameText.text = conversationLines[index].name;
             conversationLine.text = conversationLines[index].conversationLine;
+            conversationCoroutine = StartCoroutine(WaitToNextLine(3f));
         }
+    }
+    private IEnumerator WaitToNextLine(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        NextConversationLine();
     }
     private IEnumerator WaitToClose(float seconds)
     {

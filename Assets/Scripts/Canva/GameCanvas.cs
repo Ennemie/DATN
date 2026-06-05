@@ -39,6 +39,7 @@ public class GameCanvas : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        DontDestroyOnLoad(gameObject);
     }
 
     void Start()

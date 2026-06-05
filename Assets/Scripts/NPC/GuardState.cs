@@ -14,7 +14,7 @@ public class GuardState : MonoBehaviour
 
 
     private Animator anim;
-    public enum State
+    [HideInInspector] public enum State
     {
         Idle,
         FightIdle,

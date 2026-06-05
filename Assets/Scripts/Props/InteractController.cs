@@ -15,6 +15,7 @@ public class InteractController : MonoBehaviour
     public InteractType interactType;
     private GameObject canvas;
     private TMP_Text message;
+    private MissionCheck missionCheck;
     [SerializeField]private ConversationController conversationBox;
     [SerializeField] private ActivateObject activateObject;
     [SerializeField] private string startMessage;
@@ -27,6 +28,7 @@ public class InteractController : MonoBehaviour
         message.text = startMessage;
         canvas.SetActive(false);
         if(conversationBox != null ) conversationBox.EnableConversationBox(false);
+        missionCheck = GetComponent<MissionCheck>();
     }
     public void DoorInteract()
     {
@@ -70,7 +72,8 @@ public class InteractController : MonoBehaviour
     }
     public void NextScene()
     {
-        SceneManager.LoadScene(nextSceneName);
+        missionCheck.isMissionComplete = true;
+        SceneManager.LoadScene(MissionManager.instance.nextSceneName);
     }
     public void NextLineConversation()
     {

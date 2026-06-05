@@ -817,6 +817,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8977014035942129120, guid: 20a784481eeccee4ea9856a90b0d484f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 915362692}
+    - targetCorrespondingSourceObject: {fileID: 8977014035942129120, guid: 20a784481eeccee4ea9856a90b0d484f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 915362694}
   m_SourcePrefab: {fileID: 100100000, guid: 20a784481eeccee4ea9856a90b0d484f, type: 3}
 --- !u!4 &135994601 stripped
 Transform:
@@ -1353,6 +1356,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff315103d035cad4bbdda9acbbd9269a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+--- !u!114 &258767982
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 258767975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3220cc9685476c34caa1bf5602e25f44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MissionCheck
+  missionIndex: 0
+  isSceneComplete: 1
+  nextSceneName: Villa
 --- !u!1 &261575991
 GameObject:
   m_ObjectHideFlags: 0
@@ -3510,6 +3528,21 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.3523083, y: 2.5876892, z: 1.8486099}
   m_Center: {x: -0.0006866455, y: 0.79384434, z: 0.42430496}
+--- !u!114 &915362694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250561604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3220cc9685476c34caa1bf5602e25f44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  missionIndex: 1
+  isSceneComplete: 0
+  nextSceneName: 
 --- !u!1 &944327406 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6101454178329259229, guid: 0c0199d2ce977cd41b22b1d798eb2866, type: 3}
@@ -4632,37 +4665,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0c0199d2ce977cd41b22b1d798eb2866, type: 3}
---- !u!1 &1292613407
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1292613408}
-  m_Layer: 0
-  m_Name: SpawnPoint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1292613408
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1292613407}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.04, y: 0, z: -41.1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1298158918
 GameObject:
   m_ObjectHideFlags: 0
@@ -8776,11 +8778,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   nextSceneCollider: {fileID: 915362693}
+  nextSceneName: 
   missions:
   - title: "N\xF3i chuy\u1EC7n v\u1EDBi Commander"
     isCompleted: 0
     target: {fileID: 0}
   - title: "B\u1EAFt \u0111\u1EA7u nhi\u1EC7m v\u1EE5"
+    isCompleted: 0
+    target: {fileID: 0}
+  - title: "\u0110\u1ED9t nh\u1EADp villa"
     isCompleted: 0
     target: {fileID: 0}
 --- !u!4 &2040480912
@@ -9388,7 +9394,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3880583546533566676, guid: 0e577b88df7e717448ccbbd30e60b34e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 258767982}
   m_SourcePrefab: {fileID: 100100000, guid: 0e577b88df7e717448ccbbd30e60b34e, type: 3}
 --- !u!1001 &6870184901807941126
 PrefabInstance:
@@ -9639,4 +9648,3 @@ SceneRoots:
   - {fileID: 613380793156464965}
   - {fileID: 2040480912}
   - {fileID: 1704339146}
-  - {fileID: 1292613408}

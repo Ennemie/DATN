@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -45,7 +46,15 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
+    void Start()
+    {
+        StartCoroutine(WaitToShowMission());
+    }
+    private IEnumerator WaitToShowMission()
+    {
+        yield return new WaitForSeconds(1f);
+        MissionManager.instance.ShowCurrentMission();
+    }
     private void ResumeGame()
     {
         Time.timeScale = 1f;

@@ -471,6 +471,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: DoorV2 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 3731490023621599568, guid: 43eee9f9554092940955b82111321ef9, type: 3}
+      propertyPath: m_CastShadows
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6027548081588889513, guid: 43eee9f9554092940955b82111321ef9, type: 3}
+      propertyPath: m_CastShadows
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2457523139883507559, guid: 43eee9f9554092940955b82111321ef9, type: 3}
     m_RemovedGameObjects: []
@@ -562,6 +570,14 @@ PrefabInstance:
     - target: {fileID: 2457523139892898983, guid: 43eee9f9554092940955b82111321ef9, type: 3}
       propertyPath: m_Name
       value: DoorV2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3731490023621599568, guid: 43eee9f9554092940955b82111321ef9, type: 3}
+      propertyPath: m_CastShadows
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6027548081588889513, guid: 43eee9f9554092940955b82111321ef9, type: 3}
+      propertyPath: m_CastShadows
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2457523139883507559, guid: 43eee9f9554092940955b82111321ef9, type: 3}

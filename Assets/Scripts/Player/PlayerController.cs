@@ -65,6 +65,7 @@ public class PlayerController : MonoBehaviour
     {
         if (context.started && interactProp != null && acceptInput)
         {
+            Debug.Log("Interacting with: " + interactProp.gameObject.name);
             if (interactProp.interactType == InteractController.InteractType.Door) interactProp.DoorInteract();
             if (interactProp.interactType == InteractController.InteractType.Commander)
             {
@@ -72,6 +73,14 @@ public class PlayerController : MonoBehaviour
                 interactProp.CommanderTalk();
                 LookAtNPC(interactProp);
                 PlayerState.Instance.CurrentState = PlayerState.State.Talking;
+            }
+            if (interactProp.interactType == InteractController.InteractType.ActivateSwitch)
+            {
+                interactProp.ActivateSwitch();
+            }
+            if (interactProp.interactType == InteractController.InteractType.NextScene)
+            {
+                interactProp.NextScene();
             }
         }
     }
@@ -105,30 +114,44 @@ public class PlayerController : MonoBehaviour
     {
         moveDirection = new Vector3(inputVector.x, 0, inputVector.y);
 
+        // 1. TRƯỜNG HỢP ĐANG TẤN CÔNG
         if (isAttacking)
         {
             PlayerState.Instance.CurrentState = PlayerState.State.Attack;
-            if(PlayerWeapon.Instance.CurrentWeapon == PlayerWeapon.WeaponType.Pistol)
+
+            // Khi tấn công thì khóa chặt X, Z để không bị đẩy lùi hoặc trượt đi
+            rb.constraints |= RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
+
+            if (PlayerWeapon.Instance.CurrentWeapon == PlayerWeapon.WeaponType.Pistol)
             {
                 PistolShooting.Instance.Shoot();
             }
-            return; // Không di chuyển khi đang tấn công
-        }
-        else if (moveDirection.sqrMagnitude > 0.01f)
-        {
-            PlayerState.Instance.CurrentState = PlayerState.State.Running;
-            moveDirection.Normalize();
-        }
-        else if(PlayerState.Instance.CurrentState != PlayerState.State.Talking)
-        {
-            PlayerState.Instance.CurrentState = PlayerState.State.Idle;
+            return; // Thoát hàm, không chạy logic di chuyển phía dưới
         }
 
-        rb.MovePosition(rb.position + moveDirection * speed * Time.fixedDeltaTime);
-
+        // 2. TRƯỜNG HỢP CÓ BẤM DI CHUYỂN
         if (moveDirection.sqrMagnitude > 0.01f)
         {
+            // Mở khóa X, Z để chuẩn bị di chuyển
+            rb.constraints &= ~(RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ);
+
+            PlayerState.Instance.CurrentState = PlayerState.State.Running;
+            moveDirection.Normalize();
+
+            // Thực hiện di chuyển và xoay nhân vật
+            rb.MovePosition(rb.position + moveDirection * speed * Time.fixedDeltaTime);
             rb.rotation = Quaternion.LookRotation(moveDirection);
+        }
+        // 3. TRƯỜNG HỢP ĐỨNG YÊN (KHÔNG DI CHUYỂN)
+        else
+        {
+            if (PlayerState.Instance.CurrentState != PlayerState.State.Talking)
+            {
+                PlayerState.Instance.CurrentState = PlayerState.State.Idle;
+            }
+
+            // Khi đứng yên: Khóa cứng X, Z để tránh bị các ngoại lực vật lý (va chạm, quái đẩy) làm dịch chuyển
+            rb.constraints |= RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
         }
     }
 

@@ -10,6 +10,8 @@ using DG.Tweening.Core;
 
 public class ConversationController : MonoBehaviour
 {
+    [SerializeField] private int missionIndex;
+
     [SerializeField] private NPC currentNPC;
     public enum NPC
     {
@@ -30,7 +32,7 @@ public class ConversationController : MonoBehaviour
     private int conversationIndex;
 
     [SerializeField] private List<ConversationStruct> conversationLines;
-    private Coroutine conversationCoroutine;
+    private Coroutine nextLineCoroutine;
 
     public void EnableConversationBox(bool enable)
     {
@@ -43,13 +45,12 @@ public class ConversationController : MonoBehaviour
     }
     void OnEnable()
     {
-        PlayerCanvasController.Instance.Enable(false);
         conversationIndex = 0;
         ShowConversationBox(true);
+        PlayerCanvasController.Instance.Enable(false);
     }
     void OnDisable()
     {
-        PlayerCanvasController.Instance.Enable(true);
         PlayerState.Instance.CurrentState = PlayerState.State.Idle;
         PlayerController.Instance.acceptInput = true;
 
@@ -57,35 +58,40 @@ public class ConversationController : MonoBehaviour
         {
             CommanderController.Instance.state = CommanderController.State.Idle;
         }
+        PlayerCanvasController.Instance.Enable(true);
     }
     public void NextConversationLine()
     {
+        if (nextLineCoroutine != null)
+        {
+            StopCoroutine(nextLineCoroutine);
+        }
         conversationIndex++;
-        StopCoroutine(conversationCoroutine);
         DisplayConversationLine(conversationIndex);
     }
     private void DisplayConversationLine(int index)
     {
         if (index >= conversationLines.Count)
         {
+            MissionManager.instance.CompleteCurrentMission(missionIndex);
             ShowConversationBox(false);
         }
         else
         {
             npcNameText.text = conversationLines[index].name;
             conversationLine.text = conversationLines[index].conversationLine;
-            conversationCoroutine = StartCoroutine(WaitToNextLine(3f));
+            nextLineCoroutine = StartCoroutine(WaitForNextLine(4f));
         }
-    }
-    private IEnumerator WaitToNextLine(float seconds)
-    {
-        yield return new WaitForSeconds(seconds);
-        NextConversationLine();
     }
     private IEnumerator WaitToClose(float seconds)
     {
         yield return new WaitForSeconds(seconds);
         ShowConversationBox(false);
+    }
+    private IEnumerator WaitForNextLine(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        NextConversationLine();
     }
     private void ShowConversationBox(bool show)
     {

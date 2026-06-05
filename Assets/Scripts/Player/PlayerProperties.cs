@@ -5,18 +5,17 @@ public class PlayerProperties : MonoBehaviour
     public static PlayerProperties Instance { get; private set; }
 
     private int hp;
-    void Start()
+
+    void Awake()
     {
-        if (Instance != null)
+        if (Instance == null)
         {
-            Destroy(gameObject);
+            Instance = this;
         }
         else
         {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
+            Destroy(gameObject);
         }
-
     }
 
     // Update is called once per frame

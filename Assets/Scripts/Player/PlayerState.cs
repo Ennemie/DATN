@@ -7,7 +7,7 @@ public class PlayerState : MonoBehaviour
     private Animator animator;
 
     // 4 Trạng thái
-    public enum State { Idle, Running, Attack, Talking }
+    public enum State { Idle, Running, Attack, Talking}
     private State _currentState = State.Idle;
 
     public State CurrentState
@@ -23,14 +23,13 @@ public class PlayerState : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null && Instance != this)
+        if(Instance == null) {
+            Instance = this;
+        }
+        else
         {
             Destroy(gameObject);
-            return;
         }
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
-
         animator = GetComponent<Animator>();
     }
 

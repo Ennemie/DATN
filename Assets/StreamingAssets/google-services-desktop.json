@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "817513734897",
+    "project_id": "datt-f9730",
+    "storage_bucket": "datt-f9730.firebasestorage.app",
+    "firebase_url": "https://datt-f9730-default-rtdb.firebaseio.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:817513734897:android:c4365a1f2ca521afaabf50",
+        "android_client_info": {
+          "package_name": "com.mvp.datt"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApDh_1NW9lEWRtdOnwKGiq16oGP8cuXJk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

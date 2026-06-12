@@ -149,9 +149,6 @@
     background-color: rgb(234, 179, 8);
 }
 
-.cyber-btn-primary:focus {
-}
-
 .switch-mode-container {
     flex-direction: row;
     justify-content: center;
@@ -180,30 +177,32 @@
 }
 
 .cyber-btn-eye {
-    background-color: rgba(0, 0, 0, 0);
+    background-color: rgb(250, 204, 21);
     border-width: 1px;
     border-color: rgba(100, 110, 125, 0.45);
     border-radius: 0;
-    color: rgb(138, 138, 147);
-    font-size: 11px;
-    -unity-font-style: bold;
     margin: 0;
-    padding: 0 10px;
-    min-width: 54px;
-    transition-property: color, border-color, background-color;
+    padding: 0;
+    width: 45px;
+    height: 38px;
+    justify-content: center;
+    align-items: center;
+    transition-property: background-color, border-color, color;
     transition-duration: 0.2s;
 }
 
 .cyber-btn-eye:hover {
-    color: rgb(250, 204, 21);
     border-color: rgb(250, 204, 21);
-    background-color: rgba(250, 204, 21, 0.12);
+    background-color: rgb(255, 229, 28);
 }
 
 .cyber-btn-eye:active {
-    color: rgb(255, 255, 255);
     border-color: rgb(250, 204, 21);
-    background-color: rgba(250, 204, 21, 0.2);
+    background-color: rgb(234, 179, 8);
+}
+
+.cyber-btn-eye:hover .eye-icon {
+    -unity-background-image-tint-color: rgb(250, 204, 21);
 }
 
 .cyber-toggle {
@@ -242,6 +241,10 @@
     color: rgb(250, 204, 21);
 }
 
+.cyber-toggle:hover .unity-toggle__checkmark {
+    border-color: rgb(250, 204, 21);
+}
+
 .tos-toggle {
     margin-bottom: 14px;
     white-space: normal;
@@ -274,15 +277,46 @@
     color: rgb(138, 138, 147);
     -unity-font-style: bold;
     font-size: 11px;
-    padding: 8px 0;
-    transition-property: background-color, color, border-color;
+    padding: 10px 0;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    transition-property: background-color, border-color, color;
     transition-duration: 0.2s;
 }
 
 .cyber-btn-social:hover {
     background-color: rgba(255, 255, 255, 0.1);
-    color: rgb(255, 255, 255);
     border-color: rgb(250, 204, 21);
+}
+
+.cyber-btn-social:hover .social-text {
+    color: rgb(255, 255, 255);
+}
+
+.social-text {
+    color: rgb(138, 138, 147);
+    -unity-font-style: bold;
+    font-size: 11px;
+    margin: 0;
+    padding: 0;
+    transition-property: color;
+    transition-duration: 0.2s;
+}
+
+.social-icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.steam-icon {
+    background-image: url("project://database/Assets/LabsStudio-HoanG/IMG/social.png?fileID=2800000&guid=4a99f258490529e42a5585a5d1a4987b&type=3#social");
+}
+
+.google-icon {
+    background-image: url("project://database/Assets/LabsStudio-HoanG/IMG/google.png?fileID=2800000&guid=2ec49a601e531d047be5fee7e87687c4&type=3#google");
 }
 
 .otp-6-box-container {
@@ -317,10 +351,6 @@
 
 .mt-10 {
     margin-top: 10px;
-}
-
-.cyber-toggle:hover .unity-toggle__checkmark {
-    border-color: rgb(250, 204, 21);
 }
 
 .cyber-instruction-text {
@@ -373,15 +403,22 @@
     background-color: rgba(250, 204, 21, 0.3);
 }
 
+.cyber-btn-secondary:disabled {
+    opacity: 0.4;
+}
+
 .cyber-btn-otp {
     background-color: rgb(250, 204, 21);
     border-width: 0;
     border-radius: 0;
     color: rgb(0, 0, 0);
     -unity-font-style: bold;
-    font-size: 11px;
-    padding: 0 15px;
-    margin: 0;
+    font-size: 12px;
+    padding: 12px 0;
+    margin: 15px 0 0 0;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
     transition-property: background-color, opacity;
     transition-duration: 0.2s;
 }
@@ -398,10 +435,6 @@
     background-color: rgba(100, 110, 125, 0.2);
     color: rgb(138, 138, 147);
     opacity: 1;
-}
-
-.cyber-btn-secondary:disabled {
-    opacity: 0.4;
 }
 
 .success-glow-text {
@@ -475,145 +508,19 @@
     display: none;
 }
 
-.cyber-btn-eye {
-    background-color: rgb(250, 204, 21);
-    border-width: 0;
-    border-radius: 0;
-    margin: 0;
-    padding: 0;
-    width: 45px;
-    height: 38px;
-    justify-content: center;
-    align-items: center;
-    transition-property: background-color;
-    transition-duration: 0.2s;
-}
-
-.cyber-btn-eye:hover {
-    background-color: rgb(255, 229, 28);
-}
-
-.cyber-btn-eye:active {
-    background-color: rgb(234, 179, 8);
-}
-
-.eye-icon {
-    width: 22px;
-    height: 22px;
-    -unity-background-scale-mode: scale-to-fit;
-    -unity-background-image-tint-color: rgb(0, 0, 0);
-}
-
-.eye-icon-open {
-    background-image: url("project://database/Assets/IMG/view.png");
+.steam-icon {
+    background-image: url("project://database/Assets/LabsStudio-HoanG/IMG/social.png?fileID=2800000&guid=4a99f258490529e42a5585a5d1a4987b&type=3#social");
 }
 
 .eye-icon-closed {
-    background-image: url("project://database/Assets/IMG/hide.png?fileID=2800000&guid=be68a50cc2cb2a44dad68d3df0f1dd89&type=3#hide");
-}
-
-.cyber-btn-eye:hover {
-    border-color: rgb(250, 204, 21);
-    background-color: rgba(250, 204, 21, 0.12);
-}
-
-.cyber-btn-eye:active {
-    border-color: rgb(250, 204, 21);
-    background-color: rgba(250, 204, 21, 0.2);
-}
-
-.eye-icon {
-    width: 20px;
-    height: 20px;
-    -unity-background-scale-mode: scale-to-fit;
-    -unity-background-image-tint-color: rgb(138, 138, 147);
-}
-
-.cyber-btn-eye:hover .eye-icon {
-    -unity-background-image-tint-color: rgb(250, 204, 21);
-}
-
-.cyber-btn-social {
-    flex-grow: 1;
-    margin: 0 5px;
-    background-color: rgba(255, 255, 255, 0.05);
-    border-width: 1px;
-    border-color: rgba(100, 110, 125, 0.4);
-    padding: 10px 0;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    transition-property: background-color, border-color;
-    transition-duration: 0.2s;
-}
-
-.social-text {
-    color: rgb(138, 138, 147);
-    -unity-font-style: bold;
-    font-size: 11px;
-    margin: 0;
-    padding: 0;
-    transition-property: color;
-    transition-duration: 0.2s;
-}
-
-.cyber-btn-social:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-color: rgb(250, 204, 21);
-}
-
-.cyber-btn-social:hover .social-text {
-    color: rgb(255, 255, 255);
-}
-
-.social-icon {
-    width: 16px;
-    height: 16px;
-    margin-right: 8px;
-    -unity-background-scale-mode: scale-to-fit;
-}
-
-.steam-icon {
-    background-image: url("project://database/Assets/IMG/social.png?fileID=2800000&guid=4a99f258490529e42a5585a5d1a4987b&type=3#social");
-}
-
-.google-icon {
-    background-image: url("project://database/Assets/IMG/google.png?fileID=2800000&guid=2ec49a601e531d047be5fee7e87687c4&type=3#google");
-}
-
-.cyber-btn-otp {
-    background-color: rgb(250, 204, 21);
-    border-width: 0;
-    border-radius: 0;
-    color: rgb(0, 0, 0);
-    -unity-font-style: bold;
-    font-size: 12px;
-    padding: 12px 0;
-    margin: 15px 0 0 0;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-    transition-property: background-color, opacity;
-    transition-duration: 0.2s;
-}
-
-.cyber-btn-otp:hover {
-    background-color: rgb(255, 229, 28);
-}
-
-.cyber-btn-otp:active {
-    background-color: rgb(234, 179, 8);
-}
-
-.cyber-btn-otp:disabled {
-    background-color: rgba(100, 110, 125, 0.2);
-    color: rgb(138, 138, 147);
-    opacity: 1;
+    background-image: url("project://database/Assets/LabsStudio-HoanG/IMG/hide.png?fileID=2800000&guid=be68a50cc2cb2a44dad68d3df0f1dd89&type=3#hide");
 }
 
 .eye-icon-open {
-    background-image: url("project://database/Assets/IMG/view.png?fileID=2800000&guid=5b4ecbe99ed650040889e7f73a1f9e2e&type=3#view");
+    background-image: url("project://database/Assets/LabsStudio-HoanG/IMG/view.png?fileID=2800000&guid=5b4ecbe99ed650040889e7f73a1f9e2e&type=3#view");
 }
 
-steam {
+.eye-icon {
+    width: 24px;
+    height: 24px;
 }

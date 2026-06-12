@@ -1,12 +1,9 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElementsSchema.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/LabsStudio-HoanG/UI%20Toolkit/Components/AuthScreen.uss?fileID=7433441132597879392&amp;guid=0169c40c26b1b9a459b52ee4014dd952&amp;type=3#AuthScreen"/>
-    
     <ui:VisualElement class="screen-container">
-        
         <ui:VisualElement name="AuthErrorBanner" class="auth-error-banner hide-form">
             <ui:Label name="AuthErrorMessage" text="" class="cyber-error-text"/>
         </ui:VisualElement>
-        
         <ui:VisualElement name="LoginForm" class="cyber-panel">
             <ui:VisualElement class="panel-header">
                 <ui:Label text="[ HỆ THỐNG ĐĂNG NHẬP ]" class="cyber-subtitle"/>
@@ -35,11 +32,11 @@
                 <ui:Label text="[ HOẶC TRUY CẬP QUA ]" class="fast-auth-divider"/>
                 <ui:VisualElement class="fast-auth-buttons">
                     <ui:Button name="BtnSteamAuth" class="cyber-btn-social">
-                        <ui:VisualElement class="social-icon steam-icon" style="background-image: url(&quot;project://database/Assets/IMG/social.png?fileID=2800000&amp;guid=4a99f258490529e42a5585a5d1a4987b&amp;type=3#social&quot;);"/>
+                        <ui:VisualElement class="social-icon steam-icon" style="background-image: url(&quot;project://database/Assets/LabsStudio-HoanG/IMG/social.png?fileID=2800000&amp;guid=4a99f258490529e42a5585a5d1a4987b&amp;type=3#social&quot;);"/>
                         <ui:Label text="STEAM" class="social-text"/>
                     </ui:Button>
                     <ui:Button name="BtnGoogleAuth" class="cyber-btn-social">
-                        <ui:VisualElement class="social-icon google-icon" style="background-image: url(&quot;project://database/Assets/IMG/google.png?fileID=2800000&amp;guid=2ec49a601e531d047be5fee7e87687c4&amp;type=3#google&quot;);"/>
+                        <ui:VisualElement class="social-icon google-icon" style="background-image: url(&quot;project://database/Assets/LabsStudio-HoanG/IMG/google.png?fileID=2800000&amp;guid=2ec49a601e531d047be5fee7e87687c4&amp;type=3#google&quot;);"/>
                         <ui:Label text="GOOGLE" class="social-text"/>
                     </ui:Button>
                 </ui:VisualElement>
@@ -52,7 +49,6 @@
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
-
         <ui:VisualElement name="RegisterForm" class="cyber-panel hide-form">
             <ui:VisualElement class="panel-header">
                 <ui:Label text="[ HỆ THỐNG ĐĂNG KÝ ]" class="cyber-subtitle"/>
@@ -95,7 +91,6 @@
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
-
         <ui:VisualElement name="ForgotPasswordForm" class="cyber-panel hide-form">
             <ui:VisualElement class="panel-header">
                 <ui:Label text="[ HỆ THỐNG KHÔI PHỤC ]" class="cyber-subtitle"/>
@@ -109,88 +104,26 @@
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement class="panel-footer">
-                <ui:Button name="BtnSendCode" text="GỬI MÃ XÁC THỰC" class="cyber-btn-primary"/>
+                <ui:Button name="BtnSendCode" text="GỬI EMAIL XÁC THỰC" class="cyber-btn-primary"/>
                 <ui:VisualElement class="switch-mode-container">
                     <ui:Label text="NHỚ MẬT KHẨU?" class="text-muted"/>
                     <ui:Button name="LinkToLoginFromForgot" text="[ QUAY VỀ ĐĂNG NHẬP ]" class="cyber-btn-link"/>
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
-
-        <ui:VisualElement name="ResetPasswordForm" class="cyber-panel hide-form">
-            <ui:VisualElement class="panel-header">
-                <ui:Label text="[ XÁC THỰC BẢO MẬT ]" class="cyber-subtitle"/>
-                <ui:Label text="ĐẶT LẠI MẬT KHẨU" class="cyber-title"/>
-            </ui:VisualElement>
-            <ui:VisualElement class="panel-body">
-                <ui:Label text="Vui lòng kiểm tra email và nhập mã xác thực gồm 6 chữ số." class="cyber-instruction-text"/>
-                <ui:VisualElement class="input-group">
-                    <ui:Label text="MÃ XÁC THỰC (OTP)" class="input-label"/>
-                    <ui:VisualElement name="ResetOTPBoxContainer" class="otp-6-box-container">
-                        <ui:TextField name="ResetOTP_1" max-length="6" placeholder-text="" class="cyber-textfield otp-single-box"/>
-                        <ui:TextField name="ResetOTP_2" max-length="1" placeholder-text="" class="cyber-textfield otp-single-box"/>
-                        <ui:TextField name="ResetOTP_3" max-length="1" placeholder-text="" class="cyber-textfield otp-single-box"/>
-                        <ui:TextField name="ResetOTP_4" max-length="1" placeholder-text="" class="cyber-textfield otp-single-box"/>
-                        <ui:TextField name="ResetOTP_5" max-length="1" placeholder-text="" class="cyber-textfield otp-single-box"/>
-                        <ui:TextField name="ResetOTP_6" max-length="1" placeholder-text="" class="cyber-textfield otp-single-box"/>
-                    </ui:VisualElement>
-                    <ui:Button name="BtnResendOTP" text="GỬI LẠI (60s)" class="cyber-btn-otp"/>
-                </ui:VisualElement>
-                <ui:VisualElement class="input-group">
-                    <ui:Label text="MẬT KHẨU MỚI" class="input-label"/>
-                    <ui:VisualElement class="password-field-row">
-                        <ui:TextField name="ResetNewPassword" password="true" placeholder-text="Nhập mật khẩu mới..." class="cyber-textfield password-textfield"/>
-                        <ui:Button name="BtnToggleResetNewPassword" class="cyber-btn-eye">
-                            <ui:VisualElement class="eye-icon eye-icon-closed"/>
-                        </ui:Button>
-                    </ui:VisualElement>
-                </ui:VisualElement>
-                <ui:VisualElement class="input-group">
-                    <ui:Label text="XÁC NHẬN MẬT KHẨU MỚI" class="input-label"/>
-                    <ui:VisualElement class="password-field-row">
-                        <ui:TextField name="ResetConfirmPassword" password="true" placeholder-text="Nhập lại mật khẩu..." class="cyber-textfield password-textfield"/>
-                        <ui:Button name="BtnToggleResetConfirmPassword" class="cyber-btn-eye">
-                            <ui:VisualElement class="eye-icon eye-icon-closed"/>
-                        </ui:Button>
-                    </ui:VisualElement>
-                </ui:VisualElement>
-            </ui:VisualElement>
-            <ui:VisualElement class="panel-footer">
-                <ui:Button name="BtnConfirmReset" text="HOÀN TẤT" class="cyber-btn-primary"/>
-                <ui:VisualElement class="switch-mode-container">
-                    <ui:Button name="LinkToLoginFromReset" text="[ HỦY VÀ QUAY VỀ ĐĂNG NHẬP ]" class="cyber-btn-link"/>
-                </ui:VisualElement>
-            </ui:VisualElement>
-        </ui:VisualElement>
-
         <ui:VisualElement name="VerifyEmailForm" class="cyber-panel hide-form">
             <ui:VisualElement class="panel-header">
                 <ui:Label text="[ KÍCH HOẠT TÀI KHOẢN ]" class="cyber-subtitle"/>
                 <ui:Label text="XÁC NHẬN EMAIL" class="cyber-title"/>
             </ui:VisualElement>
             <ui:VisualElement class="panel-body">
-                <ui:Label text="Tài khoản đã được tạo! Vui lòng nhập mã OTP gửi tới email của bạn để kích hoạt." class="cyber-instruction-text"/>
-                <ui:VisualElement class="input-group">
-                    <ui:Label text="MÃ KÍCH HOẠT (OTP)" class="input-label"/>
-                    <ui:VisualElement name="VerifyOTPBoxContainer" class="otp-6-box-container">
-                        <ui:TextField name="VerifyOTP_1" max-length="6" placeholder-text="" class="cyber-textfield otp-single-box"/>
-                        <ui:TextField name="VerifyOTP_2" max-length="1" placeholder-text="" class="cyber-textfield otp-single-box"/>
-                        <ui:TextField name="VerifyOTP_3" max-length="1" placeholder-text="" class="cyber-textfield otp-single-box"/>
-                        <ui:TextField name="VerifyOTP_4" max-length="1" placeholder-text="" class="cyber-textfield otp-single-box"/>
-                        <ui:TextField name="VerifyOTP_5" max-length="1" placeholder-text="" class="cyber-textfield otp-single-box"/>
-                        <ui:TextField name="VerifyOTP_6" max-length="1" placeholder-text="" class="cyber-textfield otp-single-box"/>
-                    </ui:VisualElement>
-                    <ui:Button name="BtnResendVerifyOTP" text="GỬI LẠI (60s)" class="cyber-btn-otp"/>
-                </ui:VisualElement>
+                <ui:Label text="Vui lòng kiểm tra hộp thư (bao gồm cả mục Spam) và nhấp vào liên kết để kích hoạt danh tính." class="cyber-instruction-text"/>
             </ui:VisualElement>
             <ui:VisualElement class="panel-footer">
-                <ui:Button name="BtnConfirmVerify" text="KÍCH HOẠT" class="cyber-btn-primary"/>
-                <ui:VisualElement class="switch-mode-container">
-                    <ui:Button name="LinkToLoginFromVerify" text="[ QUAY VỀ ĐĂNG NHẬP ]" class="cyber-btn-link"/>
-                </ui:VisualElement>
+                <ui:Button name="BtnCheckVerifiedLogin" text="[ ĐÃ KÍCH HOẠT, ĐĂNG NHẬP NGAY ]" class="cyber-btn-primary"/>
+                <ui:Button name="BtnResendVerifyEmail" text="GỬI LẠI EMAIL" class="cyber-btn-link mt-10"/>
             </ui:VisualElement>
         </ui:VisualElement>
-
         <ui:VisualElement name="SuccessForm" class="cyber-panel hide-form">
             <ui:VisualElement class="panel-header">
                 <ui:Label text="[ HỆ THỐNG THÔNG BÁO ]" class="cyber-subtitle"/>
@@ -203,12 +136,10 @@
                 <ui:Button name="BtnSuccessConfirm" text="[ QUAY LẠI ĐĂNG NHẬP ]" class="cyber-btn-primary"/>
             </ui:VisualElement>
         </ui:VisualElement>
-        
-    </ui:VisualElement>
-
-    <ui:VisualElement name="LoadingOverlay" class="auth-loading-overlay hide-form">
-        <ui:VisualElement class="auth-loading-panel">
-            <ui:Label name="LoadingMessage" text="[ SYSTEM PROCESSING... ]" class="auth-loading-text"/>
+        <ui:VisualElement name="LoadingOverlay" class="auth-loading-overlay hide-form">
+            <ui:VisualElement class="auth-loading-card">
+                <ui:Label name="LoadingMessage" text="[ SYSTEM PROCESSING... ]" class="auth-loading-text"/>
+            </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

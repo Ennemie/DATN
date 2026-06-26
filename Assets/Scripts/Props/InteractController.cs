@@ -102,7 +102,7 @@ public class InteractController : MonoBehaviour
     private void NextScene()
     {
         missionCheck.isMissionComplete = true;
-        GameCanvas.Instance.ShowLoading(true, MissionManager.instance.nextSceneName);
+        SceneManager.LoadScene(MissionManager.instance.nextSceneName);
     }
     public void NextLineConversation()
     {

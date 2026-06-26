@@ -5,9 +5,13 @@ using UnityEngine;
 
 public class GuardState : MonoBehaviour
 {
+    private enum guardType {Melee, Shooter}
+    [SerializeField] private guardType _guardType;
+    private GuardController guardController;
+
     private GuardVisionView guardFOV;
     private MeshRenderer guardFOVRenderer;
-    private GameObject player;
+    protected GameObject player;
     private bool isDetectSoundWave = false;
     [HideInInspector] public bool isDetectPlayer = false;
     
@@ -22,27 +26,34 @@ public class GuardState : MonoBehaviour
 
     private Animator anim;
     
-    [HideInInspector] 
-    public enum State
+    [HideInInspector] public enum State
     {
         Idle,
+        FightIdle,
         DetectPlayer,
         Guarding,
         DetectSoundWave,
         Running,
         Punching,
+        WalkingBackward,
         TakingPunch,
         Stunned,
         Dying,
         StealthDying
     }
     
-    public State _state;
+    [HideInInspector] public State _state;
     public State state
     {
         get { return _state; }
         set
         {
+            if(_state == State.DetectSoundWave)
+            {
+                ClearAllTweens(); 
+                UpdateBehaviour(value);
+                return;
+            }
             if (_state != value)
             {
                 ClearAllTweens(); 
@@ -61,6 +72,15 @@ public class GuardState : MonoBehaviour
         guardFOV = GetComponent<GuardVisionView>();
         guardFOVRenderer = GetComponent<MeshRenderer>();
         state = State.Guarding;
+        switch(_guardType)
+        {
+            case guardType.Melee:
+                guardController = GetComponent<MeleeGuardController>();
+                break;
+            case guardType.Shooter:
+                guardController = GetComponent<GuardController>();
+                break;
+        }
     }
 
     private void UpdateBehaviour(State newState)
@@ -68,6 +88,9 @@ public class GuardState : MonoBehaviour
         switch(newState) {
             case State.Idle:
                 anim.CrossFade("Idle", 0.1f);
+                break;
+            case State.FightIdle:
+                anim.CrossFade("FightIdle", 0.1f);
                 break;
             case State.DetectPlayer:
                 DetectPlayer();
@@ -80,6 +103,9 @@ public class GuardState : MonoBehaviour
                 break;
             case State.Running:
                 anim.CrossFade("Running", 0.1f);
+                break;
+            case State.WalkingBackward:
+                anim.CrossFade("Walking Backward", 0.1f);
                 break;
             case State.Punching:
                 anim.CrossFade("Punch", 0.1f);
@@ -156,14 +182,14 @@ public class GuardState : MonoBehaviour
     {
         isDetectSoundWave = true;
         anim.CrossFade("Idle", 0.1f);
-
-        // Xoay quanh trục Y hướng về phía Player
+        FocusOnPlayer();
+    }
+    private void FocusOnPlayer()
+    {
         Vector3 targetPosition = new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z);
-
         activeTween = transform.DOLookAt(targetPosition, 0.5f).OnComplete(() =>
         {
-            // Chờ 5 giây rồi quay lại trạng thái tuần tra
-            activeTween = DOVirtual.DelayedCall(5f, () =>
+            activeTween =DOVirtual.DelayedCall(5f, () =>
             {
                 isDetectSoundWave = false;
                 if(!isDetectPlayer) 
@@ -188,15 +214,12 @@ public class GuardState : MonoBehaviour
         ClearAllTweens();
         isDetectPlayer = true;
         ActiveFOV(false);
-        anim.CrossFade("FightIdle", 0.1f);        
+        anim.CrossFade("FightIdle", 0.1f);
+        guardController.ChasePlayer();
     }
     private void ActiveFOV(bool isActive)
     {
         guardFOVRenderer.enabled = isActive;
         guardFOV.enabled = isActive;
-    }
-    void Update()
-    {
-        Debug.Log(state);
     }
 }

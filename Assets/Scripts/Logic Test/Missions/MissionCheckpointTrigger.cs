@@ -1,17 +1,18 @@
-// Chức năng: Checkpoint trigger độc lập; khi Player chạm vào thì lưu checkpoint gần nhất và hiện TMP CheckPoint một lần.
-// Dùng khi checkpoint không nằm trực tiếp trong MissionElement hoặc muốn checkpoint đặt tự do trong map.
-// Tham chiếu với: MissionFlowManager.SaveCheckpoint(); MissionFailManager sẽ dùng checkpoint này để respawn khi camera phát hiện hoặc player chết.
+// MissionCheckpointTrigger
+// Thin checkpoint trigger that only talks to MissionFailManager.
+// You can keep this script if you want a dedicated checkpoint object,
+// or delete it and use MissionElementTrigger -> SaveCheckpointOnly instead.
+
 using UnityEngine;
 
 [RequireComponent(typeof(Collider))]
 public class MissionCheckpointTrigger : MonoBehaviour
 {
     [Header("Manager")]
-    [SerializeField] private MissionFlowManager missionFlowManager;
+    [SerializeField] private MissionFailManager missionFailManager;
 
     [Header("Checkpoint")]
     [SerializeField] private Transform checkpointPoint;
-    [SerializeField] private string checkpointId;
     [SerializeField] private string checkpointMessage = "Checkpoint";
 
     [Header("Trigger")]
@@ -46,16 +47,25 @@ public class MissionCheckpointTrigger : MonoBehaviour
 
         hasTriggered = true;
 
-        if (missionFlowManager == null)
-            missionFlowManager = FindFirstObjectByType<MissionFlowManager>();
+        if (missionFailManager == null)
+            missionFailManager = FindFirstObjectByType<MissionFailManager>();
 
-        if (missionFlowManager == null)
+        if (missionFailManager == null)
         {
-            Debug.LogWarning("[MissionCheckpointTrigger] Missing MissionFlowManager.", this);
+            Debug.LogWarning("[MissionCheckpointTrigger] Missing MissionFailManager.", this);
             return;
         }
+        Transform cp = checkpointPoint != null ? checkpointPoint : transform;
 
-        missionFlowManager.SaveCheckpoint(checkpointPoint != null ? checkpointPoint : transform, checkpointId, checkpointMessage);
+        Debug.Log(
+            "[MissionCheckpointTrigger] Save Checkpoint\n" +
+            "Trigger Object = " + gameObject.name +
+            "\nCheckpoint Point = " + cp.name,
+            cp
+        );
+
+        missionFailManager.SetCheckpoint(cp, checkpointMessage);
+        missionFailManager.SetCheckpoint(checkpointPoint != null ? checkpointPoint : transform, checkpointMessage);
 
         if (disableAfterTriggered)
             gameObject.SetActive(false);

@@ -121,7 +121,7 @@ public class ConversationTrigger : MonoBehaviour
                 break;
 
             case AfterConversationAction.SaveCheckpointOnly:
-                missionFlowManager.SaveCheckpoint(checkpointPoint != null ? checkpointPoint : transform, checkpointId, checkpointMessage);
+               // missionFlowManager.SaveCheckpoint(checkpointPoint != null ? checkpointPoint : transform, checkpointId, checkpointMessage);
                 break;
         }
     }

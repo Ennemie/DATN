@@ -1,8 +1,10 @@
-// Chức năng: Trigger đơn giản để báo MissionFlowManager chuyển flow.
-// Có thể dùng để Complete Current Element, Activate Element By Index, hoặc Save Checkpoint Only khi Player bước vào trigger.
+﻿// Chức năng: Trigger đơn giản để báo MissionFlowManager chuyển flow.
+// Có thể dùng để Complete Current Element, Activate Element By Index,
+// hoặc Save Checkpoint Only khi Player bước vào trigger.
 // BẢN NÂNG CẤP:
 // - Có thể phát conversation trước khi thực hiện action.
 // - Phù hợp case: Player tới vị trí chỉ định -> hội thoại -> activate objective/element.
+
 using System.Collections;
 using UnityEngine;
 
@@ -20,6 +22,8 @@ public class MissionElementTrigger : MonoBehaviour
 
     [Header("Manager")]
     [SerializeField] private MissionFlowManager missionFlowManager;
+    [SerializeField] private MissionFailManager missionFailManager;
+    [SerializeField] private MissionCheckpointToast checkpointToast;
     [SerializeField] private DialogueController dialogueController;
 
     [Header("Trigger")]
@@ -71,6 +75,7 @@ public class MissionElementTrigger : MonoBehaviour
 
         hasTriggered = true;
         StartCoroutine(TriggerRoutine());
+        Debug.Log("Trigger Enter");
     }
 
     private IEnumerator TriggerRoutine()
@@ -80,18 +85,30 @@ public class MissionElementTrigger : MonoBehaviour
         if (missionFlowManager == null)
             missionFlowManager = FindFirstObjectByType<MissionFlowManager>();
 
+        if (missionFailManager == null)
+            missionFailManager = FindFirstObjectByType<MissionFailManager>();
+
+        if (checkpointToast == null)
+            checkpointToast = FindFirstObjectByType<MissionCheckpointToast>();
+
         if (dialogueController == null)
-            dialogueController = DialogueController.Instance != null ? DialogueController.Instance : FindFirstObjectByType<DialogueController>();
+            dialogueController = DialogueController.Instance != null
+                ? DialogueController.Instance
+                : FindFirstObjectByType<DialogueController>();
 
         if (conversationBeforeAction != null)
         {
             if (dialogueController != null)
                 yield return dialogueController.PlayConversationRoutine(conversationBeforeAction);
             else
-                Debug.LogWarning("[MissionElementTrigger] Missing DialogueController, cannot play conversation: " + conversationBeforeAction.ConversationId, this);
+                Debug.LogWarning(
+                    "[MissionElementTrigger] Missing DialogueController, cannot play conversation: " +
+                    conversationBeforeAction.ConversationId,
+                    this
+                );
         }
 
-        if (missionFlowManager == null && action != TriggerAction.PlayConversationOnly)
+        if (action != TriggerAction.PlayConversationOnly && missionFlowManager == null && action != TriggerAction.SaveCheckpointOnly)
         {
             Debug.LogWarning("[MissionElementTrigger] Missing MissionFlowManager.", this);
             isRunning = false;
@@ -101,19 +118,55 @@ public class MissionElementTrigger : MonoBehaviour
         switch (action)
         {
             case TriggerAction.CompleteCurrentElement:
-                missionFlowManager.CompleteCurrentElement();
+                if (missionFlowManager != null)
+                    missionFlowManager.CompleteCurrentElement();
+                else
+                    Debug.LogWarning("[MissionElementTrigger] Missing MissionFlowManager.", this);
                 break;
 
             case TriggerAction.ActivateElementByIndex:
-                missionFlowManager.ActivateElementByIndex(targetElementIndex);
+                Debug.Log("Activate Element = " + targetElementIndex);
+                if (missionFlowManager != null)
+                    missionFlowManager.ActivateElementByIndex(targetElementIndex);
+               
+                else
+                    Debug.LogWarning("[MissionElementTrigger] Missing MissionFlowManager.", this);
+
                 break;
 
             case TriggerAction.SaveCheckpointOnly:
-                missionFlowManager.SaveCheckpoint(checkpointPoint != null ? checkpointPoint : transform, checkpointId, checkpointMessage);
-                break;
+                {
+                    Transform cp = checkpointPoint != null ? checkpointPoint : transform;
+
+                    if (missionFailManager != null)
+                    {
+                        Debug.Log(
+                            "[MissionElementTrigger] Save Checkpoint\n" +
+                            "Trigger Object = " + gameObject.name +
+                            "\nCheckpoint Point = " + cp.name,
+                            cp
+                        );
+
+                        missionFailManager.SetCheckpoint(cp, checkpointMessage);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("[MissionElementTrigger] Missing MissionFailManager.", this);
+                    }
+
+                    if (checkpointToast != null)
+                        checkpointToast.ShowCheckpoint(string.IsNullOrWhiteSpace(checkpointMessage) ? "Checkpoint" : checkpointMessage);
+                    else
+                        Debug.LogWarning("[MissionElementTrigger] Missing MissionCheckpointToast.", this);
+
+                    break;
+                }
 
             case TriggerAction.StartMission:
-                missionFlowManager.StartMission();
+                if (missionFlowManager != null)
+                    missionFlowManager.StartMission();
+                else
+                    Debug.LogWarning("[MissionElementTrigger] Missing MissionFlowManager.", this);
                 break;
 
             case TriggerAction.PlayConversationOnly:

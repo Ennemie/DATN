@@ -1,0 +1,9 @@
+connectorId: default
+generate:
+  javascriptSdk:
+    - outputDir: ..\..\Library\PackageCache\com.unity.ugui@d8a2716f3013\src\dataconnect-generated
+      package: "@dataconnect/generated"
+      packageJsonDir: ..\..\Library\PackageCache\com.unity.ugui@d8a2716f3013
+      react: false
+      angular: false
+      clientCache: {}

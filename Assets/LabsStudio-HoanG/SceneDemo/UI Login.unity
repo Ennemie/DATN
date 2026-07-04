@@ -338,6 +338,63 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UltimateClean.ButtonSounds
   pressedSound: {fileID: 8300000, guid: 21d2dd36629bf406daad2064370e68fe, type: 3}
   rolloverSound: {fileID: 8300000, guid: 300e2a6fb66204ac1871593e17e2cb9f, type: 3}
+--- !u!1 &143757338
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 143757340}
+  - component: {fileID: 143757339}
+  - component: {fileID: 143757341}
+  m_Layer: 0
+  m_Name: '[SaveManager]'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &143757339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 143757338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03df56b3554070d41af8161dd851d9d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SaveManager
+--- !u!4 &143757340
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 143757338}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0, y: -0, z: -0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &143757341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 143757338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a7b2cfd1daac584f99e2773b257e051, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UnityMainThreadDispatcher
 --- !u!1 &469285642
 GameObject:
   m_ObjectHideFlags: 0
@@ -635,7 +692,7 @@ MonoBehaviour:
   entryButtonObject: {fileID: 1283016490}
   loadingCanvasGroup: {fileID: 1958251438}
   loadingFadeDuration: 3
-  targetSceneName: UI Home
+  targetSceneName: DemoMissionSave
 --- !u!224 &528150049 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7697599768608614374, guid: b9db2df8b3161824f9492545d372e690, type: 3}
@@ -2200,3 +2257,4 @@ SceneRoots:
   - {fileID: 1446730202}
   - {fileID: 1254085599}
   - {fileID: 705051244}
+  - {fileID: 143757340}

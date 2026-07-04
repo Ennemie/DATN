@@ -1,0 +1,36 @@
+type Player @table {
+  id: String! @col(name: "player_id")
+  username: String
+  dataVersion: Int
+  lastUpdated: Float
+}
+
+type Resources @table {
+  id: String!
+  player: Player!
+  intelPoints: Int
+  weaponTokens: Int
+}
+
+type Progress @table {
+  id: String!
+  player: Player!
+  currentChapter: String
+}
+
+type Mission @table {
+  id: String!
+  player: Player!
+  missionId: String!
+  mainClear: Boolean
+  stealthBonus: Boolean
+  allIntelFound: Boolean
+}
+
+type Gadget @table {
+  id: String!
+  player: Player!
+  gadgetId: String!
+  currentLevel: Int
+  isUnlocked: Boolean
+}

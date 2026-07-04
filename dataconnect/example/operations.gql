@@ -1,0 +1,59 @@
+mutation UpsertPlayerBase(
+  $playerId: String!
+  $username: String
+  $dataVersion: Int
+  $lastUpdated: Float
+  $intelPoints: Int
+  $weaponTokens: Int
+  $currentChapter: String
+) @auth(level: USER) {
+  player_upsert(data: { id: $playerId, username: $username, dataVersion: $dataVersion, lastUpdated: $lastUpdated })
+  resources_upsert(data: { id: $playerId, playerId: $playerId, intelPoints: $intelPoints, weaponTokens: $weaponTokens })
+  progress_upsert(data: { id: $playerId, playerId: $playerId, currentChapter: $currentChapter })
+}
+
+mutation UpsertPlayerMission(
+  $id: String!
+  $playerId: String!
+  $missionId: String!
+  $mainClear: Boolean
+  $stealthBonus: Boolean
+  $allIntelFound: Boolean
+) @auth(level: USER) {
+  mission_upsert(data: {
+    id: $id
+    playerId: $playerId
+    missionId: $missionId
+    mainClear: $mainClear
+    stealthBonus: $stealthBonus
+    allIntelFound: $allIntelFound
+  })
+}
+
+mutation UpsertPlayerGadget(
+  $id: String!
+  $playerId: String!
+  $gadgetId: String!
+  $currentLevel: Int
+  $isUnlocked: Boolean
+) @auth(level: USER) {
+  gadget_upsert(data: {
+    id: $id
+    playerId: $playerId
+    gadgetId: $gadgetId
+    currentLevel: $currentLevel
+    isUnlocked: $isUnlocked
+  })
+}
+
+query GetFullPlayerGame($playerId: String!) @auth(level: USER) {
+  player(id: $playerId) { id username dataVersion lastUpdated }
+  resources(id: $playerId) { intelPoints weaponTokens }
+  progress(id: $playerId) { currentChapter }
+  missions(where: { playerId: { eq: $playerId } }) {
+    missionId mainClear stealthBonus allIntelFound
+  }
+  gadgets(where: { playerId: { eq: $playerId } }) {
+    gadgetId currentLevel isUnlocked
+  }
+}

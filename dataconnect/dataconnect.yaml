@@ -1,0 +1,13 @@
+specVersion: "v1"
+serviceId: "datt-f9730-service"
+location: "asia-southeast1"
+schemas:
+  - source: "./schema"
+    datasource:
+      postgresql:
+        database: "datt-f9730-database"
+        cloudSql:
+          instanceId: "datt-f9730-instance"
+          # schemaValidation: "STRICT"     # STRICT mode makes Postgres schema match Data Connect exactly.
+          # schemaValidation: "COMPATIBLE" # COMPATIBLE mode makes Postgres schema compatible with Data Connect.
+connectorDirs: ["./example"]

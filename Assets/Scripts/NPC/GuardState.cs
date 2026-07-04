@@ -34,7 +34,9 @@ public class GuardState : MonoBehaviour
         TakingPunch,
         Stunned,
         Dying,
-        StealthDying
+        StealthDying,
+        FightIdle,
+        WalkingBackward
     }
     
     public State _state;
@@ -95,6 +97,12 @@ public class GuardState : MonoBehaviour
                 break;
             case State.StealthDying:
                 anim.CrossFade("StealthDying", 0.1f);
+                break;
+            case State.FightIdle:
+                anim.CrossFade("FightIdle", 0.1f);
+                break;
+            case State.WalkingBackward:
+                anim.CrossFade("WalkingBackward", 0.1f);
                 break;
         }
     }

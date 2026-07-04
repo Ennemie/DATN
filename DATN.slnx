@@ -1,6 +1,8 @@
 ﻿<Solution>
+  <Project Path="Firebase.App.Internal.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
   <Project Path="LevelDesigner.Editor.csproj" />
+  <Project Path="Firebase.FirebaseAI.csproj" />
   <Project Path="Assembly-CSharp-firstpass.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
 </Solution>

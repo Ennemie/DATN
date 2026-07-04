@@ -179,7 +179,6 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("Interactive Obj"))
         {
-            Debug.Log("Interactable object" + other.gameObject.name);
             if (interactProp != null) interactProp.HideMessage();
             other.TryGetComponent<InteractController>(out interactProp);
             if (interactProp != null) interactProp.ShowMessage();

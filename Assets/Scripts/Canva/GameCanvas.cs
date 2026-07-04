@@ -3,6 +3,8 @@ using DG.Tweening;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
+using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class GameCanvas : MonoBehaviour
 {
@@ -11,6 +13,11 @@ public class GameCanvas : MonoBehaviour
     // Icon color
     private Color iconColor;
     private string hexColor = "#00AEEF";
+
+    [Header("Loading")]
+    [SerializeField] private CanvasGroup loadingPanel;
+    [SerializeField] private RawImage loadingIcon;
+    [SerializeField] private RawImage gunBarrelImg;
 
     [Header("Pause Menu")]
     [SerializeField] private GameObject panel;
@@ -47,6 +54,7 @@ public class GameCanvas : MonoBehaviour
         TogglePauseIcon(false);
         iconColor = ColorUtility.TryParseHtmlString(hexColor, out var color) ? color : Color.white;
         ShowMissionBox(false);
+        ShowLoading(true, "");
     }
 
     // Pause menu
@@ -144,5 +152,63 @@ public class GameCanvas : MonoBehaviour
         yield return new WaitForSeconds(2f);
         missionText.color = iconColor;
         MissionManager.instance.AssignNextMission();
+    }
+
+    // Loading
+    public void ShowLoading(bool show, string nextSceneName)
+    {
+        // Xóa (Kill) các Tween cũ đang chạy trên các Object này để tránh xung đột dữ liệu nếu bấm liên tục
+        loadingPanel.DOKill();
+        gunBarrelImg.transform.DOKill();
+
+        if (!show)
+        {
+            // Hiệu ứng KHI TẮT LOADING
+            loadingPanel.gameObject.SetActive(false);
+            loadingIcon.gameObject.SetActive(false);
+            
+            // Chạy song song cả Fade Out và Scale Out cho mượt mà
+            loadingPanel.DOFade(0, 0.5f).SetEase(Ease.InOutQuad);
+            gunBarrelImg.transform.DOScale(new Vector3(22.6f, 22.6f, 22.6f), 1f).SetEase(Ease.InOutQuad);
+        }
+        else
+        {
+            // Hiệu ứng KHI BẬT LOADING
+            gunBarrelImg.transform.DOScale(new Vector3(5.6f, 5.6f, 5.6f), 1f).SetEase(Ease.InOutQuad).OnComplete(() =>
+            {
+                loadingPanel.gameObject.SetActive(true);
+                loadingIcon.gameObject.SetActive(true);
+                loadingPanel.DOFade(1, 0.5f).SetEase(Ease.InOutQuad).OnComplete(() =>
+                {
+                    // Nếu có tên Scene thì tiến hành tải ngầm, nếu không thì chỉ bật Loading thông thường
+                    if (!string.IsNullOrEmpty(nextSceneName))
+                    {
+                        // Gọi Coroutine xử lý tải bất đồng bộ kết hợp DOTween
+                        StartCoroutine(LoadSceneRoutine(nextSceneName));
+                    }
+                    else
+                    {
+                        DOVirtual.DelayedCall(2f, () =>
+                        {
+                            ShowLoading(false, "");
+                        });
+                    }
+                });
+            });
+        }
+    }
+    private IEnumerator LoadSceneRoutine(string sceneName)
+    {
+        // 1. Bắt đầu tải Scene ngầm (Bất đồng bộ)
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
+
+        // SỬA DÒNG NÀY: Thay vì asyncLoad.WaitForCompletion(), hãy dùng lệnh chuẩn của Unity:
+        yield return asyncLoad; 
+
+        // 3. Khi sang Scene mới thành công, đợi thêm một khoảng ngắn cho ổn định
+        yield return new WaitForSeconds(2f); 
+        
+        // Gọi lại để tắt hiệu ứng loading đi
+        ShowLoading(false, "");
     }
 }

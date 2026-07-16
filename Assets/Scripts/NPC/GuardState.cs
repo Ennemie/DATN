@@ -40,8 +40,8 @@ public class GuardState : MonoBehaviour
         Stunned,
         Dying,
         StealthDying,
-        FightIdle,
-        WalkingBackward
+        //FightIdle,
+        //WalkingBackward
     }
     
     [HideInInspector] public State _state;
@@ -124,10 +124,10 @@ public class GuardState : MonoBehaviour
             case State.StealthDying:
                 anim.CrossFade("StealthDying", 0.1f);
                 break;
-            case State.FightIdle:
+            //case State.FightIdle:
                 anim.CrossFade("FightIdle", 0.1f);
                 break;
-            case State.WalkingBackward:
+            //case State.WalkingBackward:
                 anim.CrossFade("WalkingBackward", 0.1f);
                 break;
         }

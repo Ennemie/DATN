@@ -14612,7 +14612,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2040480912}
-  - component: {fileID: 2040480911}
   m_Layer: 0
   m_Name: MissionManager
   m_TagString: Untagged
@@ -14620,30 +14619,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2040480911
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2040480910}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e397c6ba2535e24ba7dc9797b6881c0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  nextSceneCollider: {fileID: 915362693}
-  nextSceneName: 
-  missions:
-  - title: "N\xF3i chuy\u1EC7n v\u1EDBi Commander"
-    isCompleted: 0
-    target: {fileID: 0}
-  - title: "B\u1EAFt \u0111\u1EA7u nhi\u1EC7m v\u1EE5"
-    isCompleted: 0
-    target: {fileID: 0}
-  - title: "\u0110\u1ED9t nh\u1EADp villa"
-    isCompleted: 0
-    target: {fileID: 0}
 --- !u!4 &2040480912
 Transform:
   m_ObjectHideFlags: 0

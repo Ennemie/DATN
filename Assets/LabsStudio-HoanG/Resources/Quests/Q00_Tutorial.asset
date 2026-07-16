@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e68429de0c7914479354f7923576e53, type: 3}
+  m_Name: Q00_Tutorial
+  m_EditorClassIdentifier: Assembly-CSharp::QuestInfoSO
+  <Id>k__BackingField: Q01_Tutorial
+  displayName: "CH\u01AF\u01A0NG 1: B\xD3NG MA KH\u1EDEI \u0110\u1ED8NG"
+  description: "Aiden Vance \u0111\u1EE9ng \u1EDF v\u1EA1ch xu\u1EA5t ph\xE1t c\u1EE7a
+    ph\xF2ng hu\u1EA5n luy\u1EC7n t\u1ED1i t\xE2n. . Anya Croft quan s\xE1t anh t\u1EEB
+    ph\xF2ng \u0111i\u1EC1u khi\u1EC3n ph\xEDa tr\xEAn."
+  objectiveDescriptions:
+  - "n\xF3i chuy\xEAn v\u1EDBi Anya Croft"
+  - "T\xECm v\u1EADt ph\u1EA9m nhi\u1EC7m v\xF9 trong kho"
+  - "B\u1EAFt \u0110\xE2u nhi\u1EC7m v\u1EE5"
+  requiredAmounts: 
+  intelPointsReward: 0
+  weponTokenReward: 0
+  itemRewards:
+  - {fileID: 0}
+  - {fileID: 0}
+  experienceReward: 0
+  nextLinearQuest: {fileID: 0}

@@ -115,8 +115,6 @@ namespace HisaGames.CutsceneManager
                 temp.StartCutscene();
             }
         }
-
-
         /// <summary>
         /// Retrieves a character object by its name.
         /// </summary>

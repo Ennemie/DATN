@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
+using HisaGames.CutsceneManager;
 
 public class InteractController : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class InteractController : MonoBehaviour
 
     [Header("Activate Object")]
     [SerializeField] private List<ActivateObject> activateObjects;
+    public EcCutsceneManager cutsceneManager;
 
     [Header("For canvas")]
     [SerializeField] private string startMessage;
@@ -30,6 +32,8 @@ public class InteractController : MonoBehaviour
 
     [Header("For Next Scene")]
     [SerializeField] private string nextSceneName;
+    public EcCutsceneManager GetCutsceneManager;
+    public string GetCutsceneName;
     void Start()
     {
         canvas = transform.Find("Canvas").gameObject;
@@ -90,7 +94,8 @@ public class InteractController : MonoBehaviour
             CommanderController.Instance.LookAtPlayer();
             CommanderController.Instance.state = CommanderController.State.Talking;
         }
-        conversationBox.EnableConversationBox(true);
+        EcCutsceneManager.instance.InitCutscenes(GetCutsceneName);
+        
     }
     private void ActivateSwitch()
     {
@@ -117,4 +122,8 @@ public class InteractController : MonoBehaviour
     {
         canvas.SetActive(false);
     }
+}
+
+internal class pulic
+{
 }

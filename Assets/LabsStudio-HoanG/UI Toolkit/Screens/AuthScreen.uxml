@@ -1,0 +1,60 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElementsSchema.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/LabsStudio-HoanG/UI%20Toolkit/Components/AuthScreen.uss?fileID=7433441132597879392&amp;guid=0169c40c26b1b9a459b52ee4014dd952&amp;type=3#AuthScreen"/>
+    <ui:VisualElement class="screen-container">
+        <ui:VisualElement name="LoginForm" class="cyber-panel">
+            <ui:VisualElement class="panel-header">
+                <ui:Label text="[ HỆ THỐNG ĐĂNG NHẬP ]" class="cyber-subtitle"/>
+                <ui:Label text="ĐĂNG NHẬP" class="cyber-title"/>
+            </ui:VisualElement>
+            <ui:VisualElement class="panel-body">
+                <ui:VisualElement class="input-group">
+                    <ui:Label text="Tài khoản" class="input-label"/>
+                    <ui:TextField name="LoginUsername" placeholder-text="Nhập email..." class="cyber-textfield"/>
+                </ui:VisualElement>
+                <ui:VisualElement class="input-group">
+                    <ui:Label text="Mật khẩu" class="input-label"/>
+                    <ui:TextField name="LoginPassword" password="true" placeholder-text="Nhập mật khẩu..." class="cyber-textfield"/>
+                </ui:VisualElement>
+                <ui:Label text="QUÊN MẬT KHẨU?" class="cyber-link-sub"/>
+            </ui:VisualElement>
+            <ui:VisualElement class="panel-footer">
+                <ui:Button name="BtnLogin" text="ĐĂNG NHẬP" class="cyber-btn-primary"/>
+                <ui:VisualElement class="switch-mode-container">
+                    <ui:Label text="NEW USER?" class="text-muted"/>
+                    <ui:Button name="LinkToRegister" text="[ TẠO TÀI KHOẢN ]" class="cyber-btn-link"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="RegisterForm" class="cyber-panel hide-form">
+            <ui:VisualElement class="panel-header">
+                <ui:Label text="[ HỆ THỐNG ĐĂNG KÝ ]" class="cyber-subtitle"/>
+                <ui:Label text="ĐĂNG KÝ" class="cyber-title"/>
+            </ui:VisualElement>
+            <ui:VisualElement class="panel-body">
+                <ui:VisualElement class="input-group">
+                    <ui:Label text="TÊN TÀI KHOẢN" class="input-label"/>
+                    <ui:TextField name="RegUsername" placeholder-text="Nhập tên tài khoản..." class="cyber-textfield"/>
+                </ui:VisualElement>
+                <ui:VisualElement class="input-group">
+                    <ui:Label text="EMAIL" class="input-label"/>
+                    <ui:TextField name="RegEmail" placeholder-text="Nhập địa chỉ email..." class="cyber-textfield"/>
+                </ui:VisualElement>
+                <ui:VisualElement class="input-group">
+                    <ui:Label text="MẬT KHẨU" class="input-label"/>
+                    <ui:TextField name="RegPassword" password="true" placeholder-text="Nhập mật khẩu..." class="cyber-textfield"/>
+                </ui:VisualElement>
+                <ui:VisualElement class="input-group">
+                    <ui:Label text="XÁC NHẬN MẬT KHẨU" class="input-label"/>
+                    <ui:TextField name="RegConfirmPassword" password="true" placeholder-text="Nhập lại mật khẩu..." class="cyber-textfield"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement class="panel-footer">
+                <ui:Button name="BtnRegister" text="ĐĂNG KÝ" class="cyber-btn-primary"/>
+                <ui:VisualElement class="switch-mode-container">
+                    <ui:Label text="ĐÃ CÓ TÀI KHOẢN?" class="text-muted"/>
+                    <ui:Button name="LinkToLogin" text="[ QUAY VỀ ĐĂNG NHẬP ]" class="cyber-btn-link"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

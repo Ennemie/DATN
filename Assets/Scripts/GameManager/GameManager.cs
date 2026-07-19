@@ -45,8 +45,6 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        QualitySettings.vSyncCount = 0;
-        Application.targetFrameRate = 120;
     }
     void Start()
     {

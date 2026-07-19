@@ -25,10 +25,6 @@ public class PlayerCanvasController : MonoBehaviour
     [SerializeField] private RawImage inventoryImage;
     [SerializeField] private List<GameObject> inventoryItems;
 
-    // Crouch Icon
-    [SerializeField] private Image crouchIcon;
-    [SerializeField] private Image downIcon;
-
     void Awake()
     {
         iconColor = ColorUtility.TryParseHtmlString(colorHex, out Color color) ? color : Color.white;
@@ -135,10 +131,5 @@ public class PlayerCanvasController : MonoBehaviour
     public void Enable(bool enabled)
     {
         gameObject.SetActive(enabled);
-    }
-    public void UpdateCrouchIcon(bool isCrouching)
-    {
-        crouchIcon.color = isCrouching ? iconColor : Color.white;
-        downIcon.color = isCrouching ? iconColor : Color.white;
     }
 }

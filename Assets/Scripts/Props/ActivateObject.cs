@@ -4,13 +4,6 @@ using System.Runtime.CompilerServices;
 
 public class ActivateObject : MonoBehaviour
 {
-    public enum ActivateType
-    {
-        Active,
-        Move
-    }
-    [SerializeField] private ActivateType type;
-
     private Vector3 orgPos;
     [SerializeField] private Vector3 targetPos;
     private bool isActive = false;
@@ -20,24 +13,11 @@ public class ActivateObject : MonoBehaviour
     {
         orgPos = transform.localPosition;
         collider = GetComponentInChildren<BoxCollider>();
-        if(type == ActivateType.Active) gameObject.SetActive(false);
     }
 
     public void Activate()
     {
-        switch(type)
-        {
-            case ActivateType.Active:
-                DoActive();
-                break;
-            case ActivateType.Move:
-                DoMove();
-                break;
-        }
-    }
-    private void DoMove()
-    {
-        StartCoroutine(CameraTargetController.instance.FocusOnTarGet(transform));
+        Debug.Log("Activating: wall");
         transform.DOKill();
         if (!isActive)
         {
@@ -50,10 +30,5 @@ public class ActivateObject : MonoBehaviour
             transform.DOLocalMove(orgPos, 0.5f).SetEase(Ease.OutQuad).OnComplete(() => collider.enabled = true);
             isActive = false;
         }
-    }
-    private void DoActive()
-    {
-        isActive = !isActive;
-        gameObject.SetActive(isActive);
     }
 }

@@ -1,29 +1,19 @@
 using System.Collections;
 using UnityEngine;
 
-/// <summary>
-/// Guard controller that manages guard state and vision
-/// </summary>
 public class Guard1Controller : MonoBehaviour
 {
     private GuardState guardState;
-    // private NavMeshAgent agent;
-
-    private void Start()
+    void Start()
     {
         guardState = GetComponent<GuardState>();
-        // agent = GetComponent<NavMeshAgent>();
-
-        guardState.state = GuardState.State.Guarding;
-        
+        guardState.state = GuardState.State.Idle;
+        StartCoroutine(Delay());
     }
 
-    private void OnTriggerStay(Collider other)
+    IEnumerator Delay()
     {
-        if (other.CompareTag("SoundWave"))
-        {
-            if(guardState.isDetectPlayer) return;
-            guardState.state = GuardState.State.DetectSoundWave;
-        }
+        yield return new WaitForSeconds(2f);
+        guardState.state = GuardState.State.Guarding;
     }
 }

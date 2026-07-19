@@ -10,6 +10,8 @@ using DG.Tweening.Core;
 
 public class ConversationController : MonoBehaviour
 {
+    [SerializeField] private int missionIndex;
+
     [SerializeField] private NPC currentNPC;
     public enum NPC
     {
@@ -21,7 +23,6 @@ public class ConversationController : MonoBehaviour
     private Vector2 leftBtnTargetPos = new Vector2(-235f, -165.5f);
     private Vector2 rightBtnOriginalPos = new Vector2(0, -165.5f);
     private Vector2 rightBtnTargetPos = new Vector2(235f, -165.5f);
-    private MissionCheck missionCheck;
 
     [SerializeField] private RectTransform leftBtn;
     [SerializeField] private RectTransform rightBtn;
@@ -48,10 +49,6 @@ public class ConversationController : MonoBehaviour
         ShowConversationBox(true);
         PlayerCanvasController.Instance.Enable(false);
     }
-    void Start()
-    {
-        missionCheck = GetComponent<MissionCheck>();
-    }
     void OnDisable()
     {
         PlayerState.Instance.CurrentState = PlayerState.State.Idle;
@@ -76,7 +73,7 @@ public class ConversationController : MonoBehaviour
     {
         if (index >= conversationLines.Count)
         {
-            missionCheck.isMissionComplete = true;
+            MissionManager.instance.CompleteCurrentMission(missionIndex);
             ShowConversationBox(false);
         }
         else

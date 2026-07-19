@@ -13,10 +13,8 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     private Vector2 inputVector;
     private Vector3 moveDirection;
-    private bool isCrouching = false;
-    private float speed = 5f;
+    [SerializeField] private float speed = 5f;
     [HideInInspector] public bool acceptInput;
-    private GameObject soundWaveEffect;
 
     // Attack
     [HideInInspector] public bool isAttacking = false;
@@ -28,8 +26,6 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         acceptInput = true;
-        soundWaveEffect = transform.Find("SoundWaveEffect").gameObject;
-        soundWaveEffect.SetActive(false);
     }
     void Awake()
     {
@@ -69,13 +65,22 @@ public class PlayerController : MonoBehaviour
     {
         if (context.started && interactProp != null && acceptInput)
         {
-            interactProp.Interact();
-
+            Debug.Log("Interacting with: " + interactProp.gameObject.name);
+            if (interactProp.interactType == InteractController.InteractType.Door) interactProp.DoorInteract();
             if (interactProp.interactType == InteractController.InteractType.Commander)
             {
                 PlayerCanvasController.Instance.ChangeToFist();
+                interactProp.CommanderTalk();
                 LookAtNPC(interactProp);
                 PlayerState.Instance.CurrentState = PlayerState.State.Talking;
+            }
+            if (interactProp.interactType == InteractController.InteractType.ActivateSwitch)
+            {
+                interactProp.ActivateSwitch();
+            }
+            if (interactProp.interactType == InteractController.InteractType.NextScene)
+            {
+                interactProp.NextScene();
             }
         }
     }
@@ -105,19 +110,6 @@ public class PlayerController : MonoBehaviour
             PlayerCanvasController.Instance.ToggleInventory();
         }
     }
-    public void OnCrouchInput(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            ToggleCrouch();
-        }
-    }
-    public void ToggleCrouch()
-    {
-        isCrouching = !isCrouching;
-        speed = isCrouching ? 2.5f : 5f;
-        PlayerCanvasController.Instance.UpdateCrouchIcon(isCrouching);
-    }
     void FixedUpdate()
     {
         moveDirection = new Vector3(inputVector.x, 0, inputVector.y);
@@ -134,9 +126,6 @@ public class PlayerController : MonoBehaviour
             {
                 PistolShooting.Instance.Shoot();
             }
-            
-            soundWaveEffect.SetActive(true);
-
             return; // Thoát hàm, không chạy logic di chuyển phía dưới
         }
 
@@ -146,15 +135,7 @@ public class PlayerController : MonoBehaviour
             // Mở khóa X, Z để chuẩn bị di chuyển
             rb.constraints &= ~(RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ);
 
-            if(isCrouching)
-            {
-                PlayerState.Instance.CurrentState = PlayerState.State.Crouching;
-            }
-            else
-            {
-                PlayerState.Instance.CurrentState = PlayerState.State.Running;
-                soundWaveEffect.SetActive(true);
-            }
+            PlayerState.Instance.CurrentState = PlayerState.State.Running;
             moveDirection.Normalize();
 
             // Thực hiện di chuyển và xoay nhân vật
@@ -168,7 +149,6 @@ public class PlayerController : MonoBehaviour
             {
                 PlayerState.Instance.CurrentState = PlayerState.State.Idle;
             }
-            soundWaveEffect.SetActive(false);
 
             // Khi đứng yên: Khóa cứng X, Z để tránh bị các ngoại lực vật lý (va chạm, quái đẩy) làm dịch chuyển
             rb.constraints |= RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
@@ -179,7 +159,6 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("Interactive Obj"))
         {
-            if (interactProp != null) interactProp.HideMessage();
             other.TryGetComponent<InteractController>(out interactProp);
             if (interactProp != null) interactProp.ShowMessage();
         }

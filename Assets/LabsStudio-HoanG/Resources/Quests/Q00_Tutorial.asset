@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e68429de0c7914479354f7923576e53, type: 3}
   m_Name: Q00_Tutorial
   m_EditorClassIdentifier: Assembly-CSharp::QuestInfoSO
-  <Id>k__BackingField: Q01_Tutorial
+  <Id>k__BackingField: Q00_Tutorial
   displayName: "CH\u01AF\u01A0NG 1: B\xD3NG MA KH\u1EDEI \u0110\u1ED8NG"
   description: "Aiden Vance \u0111\u1EE9ng \u1EDF v\u1EA1ch xu\u1EA5t ph\xE1t c\u1EE7a
     ph\xF2ng hu\u1EA5n luy\u1EC7n t\u1ED1i t\xE2n. . Anya Croft quan s\xE1t anh t\u1EEB

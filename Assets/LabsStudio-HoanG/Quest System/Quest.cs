@@ -110,14 +110,28 @@ public class Quest
         return AdvanceToNextTask();
     }
 
-    /// <summary>Chuyển quest sang trạng thái Active.</summary>
+    /// <summary>Mở khóa quest: chuyển từ Locked → CanStart.</summary>
+    /// <returns>True nếu mở khóa thành công, false nếu quest không ở trạng thái Locked.</returns>
+    public bool Unlock()
+    {
+        if (SaveData.state != QuestState.Locked)
+        {
+            Debug.LogWarning($"[Quest] Unlock '{Info.displayName}' thất bại — " +
+                             $"state hiện tại là {SaveData.state} (cần Locked).");
+            return false;
+        }
+        SaveData.state = QuestState.CanStart;
+        return true;
+    }
+
+    /// <summary>Chuyển quest sang trạng thái Active (CanStart → Active).</summary>
     public void Activate()
     {
         if (SaveData.state == QuestState.CanStart)
             SaveData.state = QuestState.Active;
         else
-            Debug.LogWarning($"[Quest] Cố gắng kích hoạt quest '{Info.displayName}' " +
-                             $"nhưng state hiện tại là {SaveData.state} (cần CanStart).");
+            Debug.LogWarning($"[Quest] Activate '{Info.displayName}' thất bại — " +
+                             $"state hiện tại là {SaveData.state} (cần CanStart).");
     }
 
     // ── Private Helpers ───────────────────────────────────────────────────────

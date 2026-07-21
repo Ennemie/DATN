@@ -17,15 +17,71 @@ MonoBehaviour:
   description: "Aiden Vance \u0111\u1EE9ng \u1EDF v\u1EA1ch xu\u1EA5t ph\xE1t c\u1EE7a
     ph\xF2ng hu\u1EA5n luy\u1EC7n t\u1ED1i t\xE2n. . Anya Croft quan s\xE1t anh t\u1EEB
     ph\xF2ng \u0111i\u1EC1u khi\u1EC3n ph\xEDa tr\xEAn."
-  objectiveDescriptions:
-  - "n\xF3i chuy\xEAn v\u1EDBi Anya Croft"
-  - "T\xECm v\u1EADt ph\u1EA9m nhi\u1EC7m v\xF9 trong kho"
-  - "B\u1EAFt \u0110\xE2u nhi\u1EC7m v\u1EE5"
-  requiredAmounts: 
+  questIcon: {fileID: 0}
+  category: 0
+  questGiver:
+    npcId: 
+    displayName: 
+    npcAvatar: {fileID: 0}
+  questTurnIn:
+    npcId: 
+    displayName: 
+    npcAvatar: {fileID: 0}
+  tasks:
+  - taskId: task_00
+    displayName: 
+    description: 
+    taskType: 0
+    requiredAmount: 0
+    taskIcon: {fileID: 0}
+    hintText: 
+    showOnMinimap: 1
+    targetWorldPosition: {x: 0, y: 0, z: 0}
+    targetLocationName: 
+    minimapMarkerIcon: {fileID: 0}
+    linkedNpc:
+      npcId: 
+      displayName: 
+      npcAvatar: {fileID: 0}
+    preCutsceneName: 
+    postCutsceneName: 
+  - taskId: task_01
+    displayName: 
+    description: 
+    taskType: 0
+    requiredAmount: 0
+    taskIcon: {fileID: 0}
+    hintText: 
+    showOnMinimap: 1
+    targetWorldPosition: {x: 0, y: 0, z: 0}
+    targetLocationName: 
+    minimapMarkerIcon: {fileID: 0}
+    linkedNpc:
+      npcId: 
+      displayName: 
+      npcAvatar: {fileID: 0}
+    preCutsceneName: 
+    postCutsceneName: 
+  - taskId: task_02
+    displayName: 
+    description: 
+    taskType: 0
+    requiredAmount: 0
+    taskIcon: {fileID: 0}
+    hintText: 
+    showOnMinimap: 1
+    targetWorldPosition: {x: 0, y: 0, z: 0}
+    targetLocationName: 
+    minimapMarkerIcon: {fileID: 0}
+    linkedNpc:
+      npcId: 
+      displayName: 
+      npcAvatar: {fileID: 0}
+    preCutsceneName: 
+    postCutsceneName: 
   intelPointsReward: 0
-  weponTokenReward: 0
+  weaponTokenReward: 0
+  experienceReward: 0
   itemRewards:
   - {fileID: 0}
-  - {fileID: 0}
-  experienceReward: 0
   nextLinearQuest: {fileID: 0}

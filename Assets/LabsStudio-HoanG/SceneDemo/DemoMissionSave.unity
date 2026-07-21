@@ -1644,6 +1644,7 @@ GameObject:
   m_Component:
   - component: {fileID: 310465952}
   - component: {fileID: 310465951}
+  - component: {fileID: 310465953}
   m_Layer: 0
   m_Name: '[Quest Manager]'
   m_TagString: Untagged
@@ -1663,11 +1664,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1970df987f0bce7478ddb4fc51f3e749, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::QuestManager
-  startingQuest: {fileID: 0}
-  OnQuestStateChanged:
+  startingQuest: {fileID: 11400000, guid: a2a06bc9c878e584fa8ed941e711e428, type: 2}
+  questResourcesPath: Quests
+  OnQuestStarted:
     m_PersistentCalls:
       m_Calls: []
-  OnObjectiveProgressed:
+  OnTaskCompleted:
+    m_PersistentCalls:
+      m_Calls: []
+  OnQuestCompleted:
+    m_PersistentCalls:
+      m_Calls: []
+  OnTaskProgressed:
+    m_PersistentCalls:
+      m_Calls: []
+  OnQuestUnlocked:
     m_PersistentCalls:
       m_Calls: []
 --- !u!4 &310465952
@@ -1685,6 +1696,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &310465953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 310465950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63e3d05963563a0418f10184465dad8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::QuestSystemTester
+  questsToTest:
+  - {fileID: 11400000, guid: a2a06bc9c878e584fa8ed941e711e428, type: 2}
+  questIdToStart: Q00_Tutorial
+  autoInitOnPlay: 1
 --- !u!1001 &315860074
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13748,6 +13775,14 @@ PrefabInstance:
     - target: {fileID: 2308439094256691733, guid: b035184beb472f041b87b772d67ac2c4, type: 3}
       propertyPath: characterPrefabs.Array.size
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2308439094256691733, guid: b035184beb472f041b87b772d67ac2c4, type: 3}
+      propertyPath: transformSettings.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2308439094256691733, guid: b035184beb472f041b87b772d67ac2c4, type: 3}
+      propertyPath: 'characterPrefabs.Array.data[0]'
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 2308439094556915830, guid: b035184beb472f041b87b772d67ac2c4, type: 3}
       propertyPath: m_Name

@@ -12,7 +12,29 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class QuestManager : MonoBehaviour
+// ══════════════════════════════════════════════════════════════════════════════
+// SERIALIZABLE EVENT WRAPPERS
+// Unity Inspector chỉ hiện UnityEvent<T> đúng khi được bọc trong [Serializable] subclass.
+// Khai báo ở đây (ngoài class) để các script khác cũng dùng được.
+// ══════════════════════════════════════════════════════════════════════════════
+
+/// <summary>Event khi 1 Quest thay đổi state (started / completed).</summary>
+[System.Serializable]
+public class QuestEvent : UnityEvent<Quest> { }
+
+/// <summary>Event khi 1 Task trong Quest thay đổi (completed / progressed).</summary>
+[System.Serializable]
+public class QuestTaskEvent : UnityEvent<Quest, QuestTask> { }
+
+/// <summary>Event khi 1 Quest được mở khóa (Locked → CanStart).</summary>
+[System.Serializable]
+public class QuestUnlockedEvent : UnityEvent<Quest> { }
+
+/// <summary>Event khi phần thưởng quest được phát cho player (sau quest complete).</summary>
+[System.Serializable]
+public class QuestRewardEvent : UnityEvent<Quest> { }
+
+public class QuestManager : MonoBehaviour, ISaveable
 {
     // ── Singleton ─────────────────────────────────────────────────────────────
     public static QuestManager Instance { get; private set; }
@@ -29,19 +51,68 @@ public class QuestManager : MonoBehaviour
     private Dictionary<string, Quest> questMap = new Dictionary<string, Quest>();
     private string activeQuestId;
 
+    /// <summary>
+    /// True trong khoảng thời gian RestoreState() đang chạy.<br/>
+    /// QuestCutsceneBridge dùng flag này để bỏ qua cutscene khi khôi phục save
+    /// (tránh play lại cutscene đã xem rồi).
+    /// </summary>
+    public bool IsRestoringState { get; private set; }
+
     // ── Public Events ─────────────────────────────────────────────────────────
-    [Header("Events")]
-    [Tooltip("Khi 1 quest được kích hoạt (CanStart → Active).")]
-    public UnityEvent<Quest> OnQuestStarted;
+    // Dùng [Serializable] subclass → Unity Inspector hiện đúng:
+    //   • Section "Dynamic Quest"      : listener nhận tham số Quest từ runtime
+    //   • Section "Static Parameters"  : listener gọi hàm không tham số (vd: SetActive, Play)
 
-    [Tooltip("Khi 1 task của quest active hoàn thành (chuyển sang task tiếp theo).")]
-    public UnityEvent<Quest, QuestTask> OnTaskCompleted;
+    [Header("━━━  EVENTS  ━━━")]
 
-    [Tooltip("Khi toàn bộ quest hoàn thành (kể cả việc mở quest tiếp theo).")]
-    public UnityEvent<Quest> OnQuestCompleted;
+    [Tooltip(
+        "[QUEST STARTED]\n" +
+        "Fire khi quest chuyển CanStart → Active.\n" +
+        "→ Dùng để: hiện Quest Journal, animation nhận nhiệm vụ, bật minimap marker.")]
+    public QuestEvent OnQuestStarted;
 
-    [Tooltip("Khi tiến độ task thay đổi (dùng để update UI progress bar / text).")]
-    public UnityEvent<Quest, QuestTask> OnTaskProgressed;
+    [Tooltip(
+        "[TASK COMPLETED]\n" +
+        "Fire khi 1 task hoàn thành, chuyển sang task tiếp theo.\n" +
+        "→ Dùng để: hiện checkmark UI, âm thanh tick, cập nhật task list.")]
+    public QuestTaskEvent OnTaskCompleted;
+
+    [Tooltip(
+        "[QUEST COMPLETED]\n" +
+        "Fire khi toàn bộ quest hoàn thành (kể cả tự động mở quest tiếp theo).\n" +
+        "→ Dùng để: hiện màn hình phần thưởng, unlock nội dung mới, lưu thành tích.")]
+    public QuestEvent OnQuestCompleted;
+
+    [Tooltip(
+        "[TASK PROGRESSED]\n" +
+        "Fire mỗi khi tiến độ task tăng (kể cả khi task vừa hoàn thành).\n" +
+        "→ Dùng để: cập nhật thanh progress bar, text '2/5', minimap counter.")]
+    public QuestTaskEvent OnTaskProgressed;
+
+    [Tooltip(
+        "[QUEST UNLOCKED]\n" +
+        "Fire khi quest chuyển Locked → CanStart (có thể nhận nhiệm vụ).\n" +
+        "→ Dùng để: hiện dấu '!' trên NPC, notification 'Nhiệm vụ mới', highlight quest giver trên minimap.")]
+    public QuestUnlockedEvent OnQuestUnlocked;
+
+    [Tooltip(
+        "[TASK ACTIVATED]\n" +
+        "Fire khi 1 task bắt đầu trở thành task đang active (task 0 khi nhận quest, task kế khi task trước xong).\n" +
+        "→ Dùng để: tự động mở cutscene (preCutsceneName), bật minimap marker mới, cập nhật NPC dialogue.\n" +
+        "--- Kết nối với: QuestCutsceneBridge.PlayPreCutscene(Quest, QuestTask) ---")]
+    public QuestTaskEvent OnTaskActivated;
+
+    [Tooltip(
+        "[SYSTEM INITIALIZED]\n" +
+        "Fire 1 lần duy nhất sau khi InitializeSystem() hoàn tất (build xong toàn bộ quest map).\n" +
+        "→ Dùng để: UI Quest Journal rebuild danh sách, Firebase ready indicator, khởi động minimap markers.")]
+    public UnityEvent OnSystemInitialized;
+
+    [Tooltip(
+        "[REWARD GRANTED]\n" +
+        "Fire sau khi phần thưởng đã được cộng vào player (sau quest complete).\n" +
+        "→ Dùng để: hiện popup thưởng, animation xu, sound đặc biệt.")]
+    public QuestRewardEvent OnRewardGranted;
 
     // ─────────────────────────────────────────────────────────────────────────
     #region Unity Lifecycle
@@ -57,7 +128,23 @@ public class QuestManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
+            return;
         }
+    }
+
+    private void Start()
+    {
+        // Đăng ký vào SaveManager sau Awake để đảm bảo SaveManager.Instance đã tồn tại
+        if (SaveManager.Instance != null)
+            SaveManager.Instance.RegisterSaveable(this);
+        else
+            Debug.LogWarning("[QuestManager] SaveManager.Instance chưa có. Hãy đảm bảo SaveManager có trong Scene.");
+    }
+
+    private void OnDestroy()
+    {
+        if (SaveManager.Instance != null)
+            SaveManager.Instance.UnregisterSaveable(this);
     }
 
     #endregion
@@ -82,6 +169,7 @@ public class QuestManager : MonoBehaviour
         if (allQuestInfos.Length == 0)
             Debug.LogWarning($"[QuestManager] Không tìm thấy QuestInfoSO nào trong Resources/{questResourcesPath}/");
 
+        // Pass 1: build toàn bộ quest map trước
         foreach (QuestInfoSO info in allQuestInfos)
         {
             // Tìm save data tương ứng từ Firebase, hoặc tạo mới
@@ -89,6 +177,7 @@ public class QuestManager : MonoBehaviour
 
             if (saveData == null)
             {
+                // Game mới: quest đầu tiên tự động CanStart, còn lại Locked
                 var initialState = (info == startingQuest) ? QuestState.CanStart : QuestState.Locked;
                 saveData = new QuestSaveData(info.Id, initialState, info.tasks.Count);
             }
@@ -110,7 +199,26 @@ public class QuestManager : MonoBehaviour
                 activeQuestId = info.Id;
         }
 
+        // Pass 2: fire events sau khi toàn bộ quest map đã sẵn sàng
+        foreach (Quest quest in questMap.Values)
+        {
+            if (quest.State == QuestState.CanStart)
+            {
+                OnQuestUnlocked?.Invoke(quest);
+                Debug.Log($"[QuestManager] Quest sẵn sàng nhận: '{quest.Info.displayName}'");
+            }
+            else if (quest.State == QuestState.Active)
+            {
+                // Khôi phục trạng thái active: fire OnTaskActivated để hệ thống khôi phục
+                // (vd: minimap hiện lại marker, NPC giữ đuóng dialogue)
+                OnTaskActivated?.Invoke(quest, quest.CurrentTask);
+                Debug.Log($"[QuestManager] Khôi phục quest active: '{quest.Info.displayName}' " +
+                          $"→ Task: '{quest.CurrentTask?.Info.displayName}'");
+            }
+        }
+
         Debug.Log($"[QuestManager] Đã khởi tạo {questMap.Count} quest. Active: {activeQuestId ?? "Không có"}");
+        OnSystemInitialized?.Invoke();  // thông báo cho UI/Firebase sẵn sàng
     }
 
     #endregion
@@ -176,7 +284,9 @@ public class QuestManager : MonoBehaviour
         activeQuestId = questId;
 
         OnQuestStarted?.Invoke(quest);
-        SaveToFirebase();
+        // Fire OnTaskActivated cho task đầu tiên → trigger preCutsceneName của task 0
+        OnTaskActivated?.Invoke(quest, quest.CurrentTask);
+        TriggerSave();
     }
 
     /// <summary>
@@ -228,15 +338,10 @@ public class QuestManager : MonoBehaviour
             return;
         }
 
-        if (quest.State != QuestState.Locked)
-        {
-            Debug.LogWarning($"[QuestManager] UnlockQuest: Quest '{quest.Info.displayName}' " +
-                             $"không ở trạng thái Locked (hiện tại: {quest.State})");
-            return;
-        }
+        if (!quest.Unlock()) return; // quest.Unlock() tự log warning nếu sai state
 
-        quest.SaveData.state = QuestState.CanStart;
-        SaveToFirebase();
+        OnQuestUnlocked?.Invoke(quest);
+        TriggerSave();
     }
 
     #endregion
@@ -252,14 +357,16 @@ public class QuestManager : MonoBehaviour
         {
             case TaskCompletionResult.Progressed:
                 OnTaskProgressed?.Invoke(quest, quest.CurrentTask);
-                SaveToFirebase();
+                TriggerSave();
                 break;
 
             case TaskCompletionResult.TaskCompleted:
                 // completedTask là task vừa xong, quest.CurrentTask là task mới bắt đầu
                 OnTaskCompleted?.Invoke(quest, completedTask);
                 OnTaskProgressed?.Invoke(quest, quest.CurrentTask);
-                SaveToFirebase();
+                // Fire OnTaskActivated → trigger preCutsceneName của task mới
+                OnTaskActivated?.Invoke(quest, quest.CurrentTask);
+                TriggerSave();
                 break;
 
             case TaskCompletionResult.QuestCompleted:
@@ -267,18 +374,24 @@ public class QuestManager : MonoBehaviour
                 OnQuestCompleted?.Invoke(quest);
                 activeQuestId = null;
 
-                // Tự động mở quest tiếp theo trong chuỗi tuyến tính
+                // Phát thưởng cho player
+                DistributeRewards(quest);
+
+                // Tự động mở khóa quest tiếp theo trong chuỗi tuyến tính
                 if (quest.Info.nextLinearQuest != null)
                 {
                     string nextId = quest.Info.nextLinearQuest.Id;
                     if (questMap.TryGetValue(nextId, out Quest nextQuest))
                     {
-                        nextQuest.SaveData.state = QuestState.CanStart;
-                        Debug.Log($"[QuestManager] Mở khóa quest tiếp theo: '{nextQuest.Info.displayName}'");
+                        if (nextQuest.Unlock())
+                        {
+                            OnQuestUnlocked?.Invoke(nextQuest);
+                            Debug.Log($"[QuestManager] Mở khóa quest tiếp theo: '{nextQuest.Info.displayName}'");
+                        }
                     }
                 }
 
-                SaveToFirebase();
+                TriggerSave();
                 break;
 
             case TaskCompletionResult.QuestNotActive:
@@ -291,16 +404,93 @@ public class QuestManager : MonoBehaviour
         }
     }
 
-    private void SaveToFirebase()
+    // ── ISaveable Implementation ────────────────────────────────────────────────────
+
+    /// <summary>
+    /// SaveManager gọi hàm này khi cần lưu: "Đổ dữ liệu quest vào GameSaveDTO."
+    /// </summary>
+    public void CaptureState(GameSaveDTO currentSave)
     {
-        List<QuestSaveData> dataToSave = questMap.Values
+        currentSave.questSaves = questMap.Values
             .Select(q => q.SaveData)
             .ToList();
 
-        // TODO: Serialize dataToSave thành JSON và đẩy lên Firebase
-        // Ví dụ: FirebaseDatabase.DefaultInstance.GetReference("users/{uid}/quests")
-        //        .SetValueAsync(JsonUtility.ToJson(new Wrapper { quests = dataToSave }));
-        Debug.Log($"[QuestManager] Saving {dataToSave.Count} quests to Firebase...");
+        Debug.Log($"[QuestManager] CaptureState: đã đổ {currentSave.questSaves.Count} quest vào GameSaveDTO.");
+    }
+
+    /// <summary>
+    /// SaveManager gọi hàm này sau khi load xong: "Lấy dữ liệu quest từ GameSaveDTO ra dùng."
+    /// </summary>
+    public void RestoreState(GameSaveDTO currentSave)
+    {
+        // Set flag trước khi init — QuestCutsceneBridge sẽ skip auto-trigger cutscene
+        IsRestoringState = true;
+
+        InitializeSystem(currentSave.questSaves ?? new System.Collections.Generic.List<QuestSaveData>());
+
+        IsRestoringState = false; // Reset sau khi init xong
+        Debug.Log($"[QuestManager] RestoreState: khôi phục {currentSave.questSaves?.Count ?? 0} quest.");
+    }
+
+    private void TriggerSave()
+    {
+        if (SaveManager.Instance != null)
+            SaveManager.Instance.TriggerSaveGame();
+        else
+            Debug.LogWarning("[QuestManager] TriggerSave: SaveManager.Instance là null.");
+    }
+
+    /// <summary>
+    /// Cộng phần thưởng của quest vào CurrentState của SaveManager.
+    /// UI lắng nghe OnRewardGranted để hiện animation/popup.
+    /// </summary>
+    private void DistributeRewards(Quest quest)
+    {
+        var info = quest.Info;
+
+        // Kiểm tra có thưởng không trước khi xử lý
+        bool hasReward = info.intelPointsReward > 0
+                      || info.weaponTokenReward > 0
+                      || info.experienceReward  > 0
+                      || (info.itemRewards != null && info.itemRewards.Length > 0);
+
+        if (!hasReward)
+        {
+            Debug.Log($"[QuestManager] Quest '{info.displayName}' không có phần thưởng.");
+            return;
+        }
+
+        // Cộng vào SaveManager.CurrentState (RAM) — TriggerSave sẽ flush xuống file/Firebase
+        if (SaveManager.Instance?.CurrentState?.resources != null)
+        {
+            var res = SaveManager.Instance.CurrentState.resources;
+            res.intelPoints   += info.intelPointsReward;
+            res.weaponTokens  += info.weaponTokenReward;
+            res.experience    += info.experienceReward;
+        }
+        else
+        {
+            Debug.LogWarning("[QuestManager] DistributeRewards: SaveManager.CurrentState.resources là null. " +
+                             "Phần thưởng số không được lưu.");
+        }
+
+        // Item rewards: spawn/unlock (logic tuzỳ hệ thống item của game)
+        if (info.itemRewards != null)
+        {
+            foreach (var item in info.itemRewards)
+            {
+                if (item != null)
+                    Debug.Log($"[QuestManager] TODO: Grant item '{item.name}' cho player.");
+                    // Ví dụ: InventoryManager.Instance.AddItem(item);
+            }
+        }
+
+        Debug.Log($"[QuestManager] Phần thưởng '{info.displayName}': " +
+                  $"+{info.intelPointsReward} Intel | " +
+                  $"+{info.weaponTokenReward} Tokens | " +
+                  $"+{info.experienceReward} EXP");
+
+        OnRewardGranted?.Invoke(quest);
     }
 
     #endregion

@@ -57,14 +57,14 @@ public class FirebaseSaveRepository : ISaveRepository
             }), idToken);
 
             // 2. Lưu từng Mission
-            if (data.missions != null)
+            if (data.questSaves != null)
             {
-                foreach (var mission in data.missions)
+                foreach (var mission in data.questSaves)
                 {
                     var missionVars = new {
-                        id = $"{userId}_{mission.missionId}",
+                        id = $"{userId}_{mission.questId}",
                         playerId = userId,
-                        missionId = mission.missionId,
+                        missionId = mission.questId,
                         mainClear = mission.mainClear,
                         stealthBonus = mission.stealthBonus,
                         allIntelFound = mission.allIntelFound
@@ -157,7 +157,7 @@ public class FirebaseSaveRepository : ISaveRepository
                 // Parse Missions
                 if (dataToken["playerMissions"] != null && dataToken["playerMissions"].Type == JTokenType.Array)
                 {
-                    loadedData.missions = dataToken["playerMissions"].ToObject<List<MissionData>>();
+                    loadedData.questSaves = dataToken["playerMissions"].ToObject<List<QuestSaveData>>();
                 }
 
                 // Parse Gadgets

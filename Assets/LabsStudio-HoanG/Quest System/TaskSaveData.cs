@@ -11,6 +11,12 @@ public class TaskSaveData
     /// <summary>Tiến độ hiện tại của task (0 → TaskInfo.requiredAmount).</summary>
     public int currentProgress;
 
+    public TaskSaveData()
+    {
+        taskId = string.Empty;
+        currentProgress = 0;
+    }
+
     public TaskSaveData(string id)
     {
         taskId         = id;

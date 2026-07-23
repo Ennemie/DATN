@@ -3,11 +3,13 @@
 // Không chứa logic — chỉ là Data Transfer Object (DTO) cho Firebase / PlayerPrefs.
 
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 [System.Serializable]
 public class QuestSaveData
 {
     /// <summary>Khớp với QuestInfoSO.Id để tìm lại đúng quest khi load.</summary>
+    [JsonProperty("missionId")]
     public string questId;
 
     /// <summary>Trạng thái tổng của quest (Locked / CanStart / Active / Completed).</summary>
@@ -21,6 +23,32 @@ public class QuestSaveData
     /// tương ứng với số task trong QuestInfoSO.tasks[].
     /// </summary>
     public List<TaskSaveData> taskSaves;
+
+    /// <summary>Backward-compatible mission flag used by the Firebase schema.</summary>
+    public bool stealthBonus;
+
+    /// <summary>Backward-compatible mission flag used by the Firebase schema.</summary>
+    public bool allIntelFound;
+
+    /// <summary>
+    /// Legacy mission completion flag. Kept for Firebase compatibility.
+    /// Quest state remains the source of truth in the runtime quest system.
+    /// </summary>
+    public bool mainClear
+    {
+        get => state == QuestState.Completed;
+        set
+        {
+            if (value)
+                state = QuestState.Completed;
+        }
+    }
+
+    /// <summary>Default ctor required for JSON deserialization.</summary>
+    public QuestSaveData()
+    {
+        taskSaves = new List<TaskSaveData>();
+    }
 
     /// <summary>Khởi tạo mới với tất cả task ở mức tiến độ 0.</summary>
     public QuestSaveData(string id, QuestState initialState, int taskCount)

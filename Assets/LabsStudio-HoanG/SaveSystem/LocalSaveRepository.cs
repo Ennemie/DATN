@@ -53,7 +53,7 @@ public class LocalSaveRepository : ISaveRepository
 
             Debug.Log($"<color=lime>[LocalSave]</color> ■ Load THÀNH CÔNG | " +
                       $"username=\"{loadedData.username}\" | " +
-                      $"missions={loadedData.missions.Count} | " +
+                      $"quests={loadedData.questSaves.Count} | " +
                       $"gadgets={loadedData.gadgets.Count} | " +
                       $"lastUpdated={loadedData.lastUpdated}");
             onLoaded?.Invoke(loadedData);

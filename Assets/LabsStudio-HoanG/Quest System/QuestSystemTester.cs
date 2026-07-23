@@ -3,6 +3,7 @@
 // Gắn script này vào cùng GameObject với QuestManager, hoặc GameObject riêng trong scene test.
 
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -137,19 +138,19 @@ public class QuestSystemTester : MonoBehaviour
     }
 
     private void OnQuestStarted(Quest quest)
-        => Debug.Log($"<color=cyan>[EVENT] 🚀 Quest Started: '{quest.Info.displayName}'</color>");
+        => Debug.Log($"<color=cyan>[EVENT] Quest Started: '{quest.Info.displayName}'</color>");
 
     private void OnTaskProgressed(Quest quest, QuestTask task)
-        => Debug.Log($"<color=white>[EVENT] 📈 Task Progressed: '{task?.Info.displayName}' | {task?.ProgressText}</color>");
+        => Debug.Log($"<color=white>[EVENT] Task Progressed: '{task?.Info.displayName}' | {task?.ProgressText}</color>");
 
     private void OnTaskCompleted(Quest quest, QuestTask task)
-        => Debug.Log($"<color=yellow>[EVENT] ✔ Task Completed: '{task?.Info.displayName}'</color>");
+        => Debug.Log($"<color=yellow>[EVENT] Task Completed: '{task?.Info.displayName}'</color>");
 
     private void OnQuestCompleted(Quest quest)
-        => Debug.Log($"<color=green>[EVENT] 🏆 Quest Completed: '{quest.Info.displayName}'</color>");
+        => Debug.Log($"<color=green>[EVENT] Quest Completed: '{quest.Info.displayName}'</color>");
 
     private void OnQuestUnlocked(Quest quest)
-        => Debug.Log($"<color=orange>[EVENT] 🔓 Quest Unlocked: '{quest.Info.displayName}' — Quest Giver: '{quest.Info.questGiver?.displayName}'</color>");
+        => Debug.Log($"<color=orange>[EVENT] Quest Unlocked: '{quest.Info.displayName}' — Quest Giver: '{quest.Info.questGiver?.displayName}'</color>");
 
     private void OnTaskActivated(Quest quest, QuestTask task)
         => Debug.Log($"<color=#00BFFF>[EVENT] ▶ Task Activated: '{task?.Info.displayName}' " +

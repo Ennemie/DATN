@@ -101,14 +101,14 @@ Material:
     - _SpeedY: 0.005
     - _SrcBlend: 1
     - _UVSec: 0
-    - _WarpStrength: 0.062
+    - _WarpStrength: 0.25
     - _ZWrite: 1
     m_Colors:
-    - _CloudSpeed: {r: 0.0002, g: 0.0007, b: 0, a: 0}
+    - _CloudSpeed: {r: 0.004, g: 0.005, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _DetailSpeed: {r: 0.35, g: 0.14, b: 0, a: 0}
+    - _DetailSpeed: {r: 0.00004, g: 0.008, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _FlowSpeed: {r: 0.055, g: 0.002, b: 0.22, a: 0}
+    - _FlowSpeed: {r: 0.004, g: 0.0000008, b: 0.22, a: 0}
     - _Speed1: {r: 0.015, g: 0.009, b: 0, a: 0}
     - _Speed2: {r: -0.011, g: 0.017, b: 0, a: 0}
     - _Tint: {r: 0.7882353, g: 0.7882353, b: 0.78431374, a: 0.3529412}

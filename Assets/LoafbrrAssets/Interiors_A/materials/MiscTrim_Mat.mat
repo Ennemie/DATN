@@ -128,7 +128,7 @@ Material:
     - _ZWriteControl: 0
     - _alpha: 16.14
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 0.7584905, g: 0.7584905, b: 0.7584905, a: 1}
     - _EmissionColor: {r: 10.579866, g: 10.392668, b: 9.33224, a: 0}
     - _UV_Tiling: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []

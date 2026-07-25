@@ -7,7 +7,7 @@ public class PlayerState : MonoBehaviour
     private Animator animator;
 
     // 4 Trạng thái
-    public enum State { Idle, Running, Attack, Talking}
+    public enum State { Idle, Crouching, Running, Attack, Talking}
     private State _currentState = State.Idle;
 
     public State CurrentState
@@ -61,6 +61,7 @@ public class PlayerState : MonoBehaviour
     private void PlayFistAnim(State state)
     {
         if (state == State.Idle) animator.CrossFade("Fist_Idle", 0.1f);
+        else if (state == State.Crouching) animator.CrossFade("Crouched_Walk", 0.02f);
         else if (state == State.Running) animator.CrossFade("Fist_Running", 0.01f);
         else if (state == State.Attack)
         {
@@ -77,6 +78,7 @@ public class PlayerState : MonoBehaviour
     private void PlayKnifeAnim(State state)
     {
         if (state == State.Idle) animator.CrossFade("Knife_Idle", 0.05f);
+        else if (state == State.Crouching) animator.CrossFade("Crouched_Walk", 0.02f);
         else if (state == State.Running) animator.CrossFade("Fist_Running", 0.01f);
         else if (state == State.Attack)
         {
@@ -93,6 +95,7 @@ public class PlayerState : MonoBehaviour
     private void PlayPistolAnim(State state)
     {
         if (state == State.Idle) animator.CrossFade("Pistol_Idle", 0.05f);
+        else if (state == State.Crouching) animator.CrossFade("Crouched_Walk", 0.02f);
         else if (state == State.Running) animator.CrossFade("Pistol_Running", 0.1f);
         else if(state == State.Talking) 
         {
@@ -107,6 +110,11 @@ public class PlayerState : MonoBehaviour
         {
             animator.CrossFade("Shotgun_Idle", 0.1f);
             PlayerWeapon.Instance.UpdateShotgunAnimation("Idle");
+        }
+        else if (state == State.Crouching)
+        {
+            animator.CrossFade("Crouched_Walk", 0.02f);
+            PlayerWeapon.Instance.UpdateShotgunAnimation("Crouch");
         }
         else if (state == State.Running)
         {

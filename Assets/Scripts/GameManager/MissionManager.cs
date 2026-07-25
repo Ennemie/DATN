@@ -6,6 +6,7 @@ public class MissionManager : MonoBehaviour
     public static MissionManager instance { get; private set; }
 
     [SerializeField] private BoxCollider nextSceneCollider;
+    [HideInInspector] public string nextSceneName;
     void Awake()
     {
         if (instance == null)
@@ -21,10 +22,11 @@ public class MissionManager : MonoBehaviour
     void Start()
     {
         nextSceneCollider.enabled = false;
+        currentMissionIndex = 0;
     }
 
     [SerializeField] private List<Mission> missions;
-    private int currentMissionIndex = 0;
+    private int currentMissionIndex;
 
     public void ShowCurrentMission()
     {
@@ -35,14 +37,18 @@ public class MissionManager : MonoBehaviour
     {
         return missions[currentMissionIndex].title;
     }
-    public void CompleteCurrentMission(int missionIndex)
+    public void CompleteCurrentMission(int missionIndex, bool isSceneComplete, string _nextSceneName)
     {
         if (missions[missionIndex].isCompleted == true) return;
         if (missionIndex != currentMissionIndex) return;
 
         missions[missionIndex].isCompleted = true;
         StartCoroutine(GameCanvas.Instance.ShowNextMission());
-        nextSceneCollider.enabled = true;
+        if (isSceneComplete)
+        {
+            nextSceneCollider.enabled = true;
+            nextSceneName = _nextSceneName;
+        }
     }
     public void AssignNextMission()
     {

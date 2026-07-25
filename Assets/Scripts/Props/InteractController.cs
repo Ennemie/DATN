@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class InteractController : MonoBehaviour
 {
@@ -10,15 +11,24 @@ public class InteractController : MonoBehaviour
         Door,
         Commander,
         ActivateSwitch,
-        NextScene
+        NextScene,
     }
     public InteractType interactType;
     private GameObject canvas;
     private TMP_Text message;
+    private MissionCheck missionCheck;
+
+    [Header("Conversation")]
     [SerializeField]private ConversationController conversationBox;
-    [SerializeField] private ActivateObject activateObject;
+
+    [Header("Activate Object")]
+    [SerializeField] private List<ActivateObject> activateObjects;
+
+    [Header("For canvas")]
     [SerializeField] private string startMessage;
     [SerializeField] private string endMessage;
+
+    [Header("For Next Scene")]
     [SerializeField] private string nextSceneName;
     void Start()
     {
@@ -27,8 +37,27 @@ public class InteractController : MonoBehaviour
         message.text = startMessage;
         canvas.SetActive(false);
         if(conversationBox != null ) conversationBox.EnableConversationBox(false);
+        missionCheck = GetComponent<MissionCheck>();
     }
-    public void DoorInteract()
+    public void Interact()
+    {
+        switch (interactType)
+        {
+            case InteractType.Door:
+                DoorInteract();
+                break;
+            case InteractType.Commander:
+                CommanderTalk();
+                break;
+            case InteractType.ActivateSwitch:
+                ActivateSwitch();
+                break;
+            case InteractType.NextScene:
+                NextScene();
+                break;
+        }
+    }
+    private void DoorInteract()
     {
 
         if (message.text == startMessage) message.text = endMessage;
@@ -49,7 +78,7 @@ public class InteractController : MonoBehaviour
             return;
         }
     }
-    public void CommanderTalk()
+    private void CommanderTalk()
     {
         canvas.SetActive(false);
         if (CommanderController.Instance.state == CommanderController.State.Sitting)
@@ -63,14 +92,17 @@ public class InteractController : MonoBehaviour
         }
         conversationBox.EnableConversationBox(true);
     }
-    public void ActivateSwitch()
+    private void ActivateSwitch()
     {
-        if (activateObject == null) Debug.Log("activate obj null!");
-        if (activateObject != null) activateObject.Activate();
+        foreach (ActivateObject obj in activateObjects)
+        {
+            obj.Activate();
+        }
     }
-    public void NextScene()
+    private void NextScene()
     {
-        SceneManager.LoadScene(nextSceneName);
+        missionCheck.isMissionComplete = true;
+        GameCanvas.Instance.ShowLoading(true, MissionManager.instance.nextSceneName);
     }
     public void NextLineConversation()
     {

@@ -6,11 +6,12 @@ TagManager:
   tags:
   - Interactive Obj
   - Door
+  - SoundWave
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - FOV
   - Water
   - UI
   - 

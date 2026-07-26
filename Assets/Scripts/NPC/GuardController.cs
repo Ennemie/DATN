@@ -16,12 +16,15 @@ public class GuardController : MonoBehaviour
     protected float speed = 4f;
     protected bool isChasing = false;
     protected float distance;
-    protected Sequence attackSequence;
+
+    // Properties
+    private EnemyProperties enemyProperties;
 
     protected virtual void Start()
     {
         guardState = GetComponent<GuardState>();
         player = GameObject.FindGameObjectWithTag("Player");
+        enemyProperties = GetComponent<EnemyProperties>();
         agent = GetComponent<NavMeshAgent>();
         guardState.state = GuardState.State.Guarding;
     }
@@ -30,6 +33,7 @@ public class GuardController : MonoBehaviour
     {
         if (other.CompareTag("SoundWave"))
         {
+            Debug.Log("Guard detected sound wave");
             if(guardState.isDetectPlayer) return;
             guardState.state = GuardState.State.DetectSoundWave;
         }
@@ -37,6 +41,10 @@ public class GuardController : MonoBehaviour
     protected void FocusOnPlayer()
     {
         transform.DOLookAt(playerPos, 0.5f);
+    }
+    public void TakeDamage(int damage)
+    {
+        enemyProperties.TakeDamage(damage);
     }
     public virtual void ChasePlayer(){}
     protected virtual void Attack(){}

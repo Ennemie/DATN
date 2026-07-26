@@ -8,10 +8,10 @@ public class GuardState : MonoBehaviour
     private enum guardType {Melee, Shooter}
     [SerializeField] private guardType _guardType;
     private GuardController guardController;
-
     private GuardVisionView guardFOV;
     private MeshRenderer guardFOVRenderer;
     protected GameObject player;
+    [HideInInspector] public bool isDead = false;
     private bool isDetectSoundWave = false;
     [HideInInspector] public bool isDetectPlayer = false;
     
@@ -48,6 +48,11 @@ public class GuardState : MonoBehaviour
         get { return _state; }
         set
         {
+            if(isDead)
+            {
+                anim.CrossFade("Stunned", 0.01f);
+                return;
+            }
             if(_state == State.DetectSoundWave)
             {
                 ClearAllTweens(); 
@@ -214,7 +219,6 @@ public class GuardState : MonoBehaviour
         ClearAllTweens();
         isDetectPlayer = true;
         ActiveFOV(false);
-        anim.CrossFade("FightIdle", 0.1f);
         guardController.ChasePlayer();
     }
     private void ActiveFOV(bool isActive)

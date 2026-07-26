@@ -141,4 +141,8 @@ public class PlayerCanvasController : MonoBehaviour
         crouchIcon.color = isCrouching ? iconColor : Color.white;
         downIcon.color = isCrouching ? iconColor : Color.white;
     }
+    public void ToggleObject(bool isActive)
+    {
+        gameObject.SetActive(isActive);
+    }
 }

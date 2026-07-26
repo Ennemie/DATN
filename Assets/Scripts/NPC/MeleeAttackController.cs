@@ -13,14 +13,15 @@ public class MeleeAttackController : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            meleeGuardController.isPlayerOnAttackRange = true;
             meleeGuardController._isReadyToAttack = true;
         }
     }
-    private void OnTriggerStay(Collider other)
+    private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            
+            meleeGuardController.isPlayerOnAttackRange = false;
         }
     }
 }

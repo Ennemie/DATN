@@ -21,12 +21,22 @@ public class PlayerController : MonoBehaviour
     // Attack
     [HideInInspector] public bool isAttacking = false;
     private bool isReadyToAttack = true;
+    [HideInInspector] public bool isEnemyOnAttackRange = false;
 
     // Interact
     private InteractController interactProp = null;
+
+    // Collider
+    private CapsuleCollider playerCollider;
+    private float originalColliderCenterY = 0.8482664f;
+    private float originalColliderHeight = 1.882319f;
+    private float crouchColliderCenterY = 0.4959992f;
+    private float crouchColliderHeight = 1.177785f;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        playerCollider = GetComponent<CapsuleCollider>();
         acceptInput = true;
         soundWaveEffect = transform.Find("SoundWaveEffect").gameObject;
         soundWaveEffect.SetActive(false);
@@ -47,6 +57,11 @@ public class PlayerController : MonoBehaviour
         if (acceptInput)
         {
             inputVector = context.ReadValue<Vector2>();
+            if(isCrouching) UpdateColliderForCrouch(true);
+        }
+        if(context.canceled)
+        {
+            if(isCrouching) UpdateColliderForCrouch(false);
         }
     }
     public void OnAttackInput(InputAction.CallbackContext context)
@@ -54,10 +69,17 @@ public class PlayerController : MonoBehaviour
         if(EventSystem.current.IsPointerOverGameObject()) return;
         if (context.performed && isReadyToAttack && acceptInput)
         {
-                isAttacking = true;
-                isReadyToAttack = false;
-                StartCoroutine(AttackCoolDown());
+            Attack();
         }
+    }
+    private void Attack()
+    {
+        isAttacking = true;
+        isReadyToAttack = false;
+        DOVirtual.DelayedCall(1f, () => {
+            PlayerAttackRangeController.Instance.HitEnemy();
+        });
+        StartCoroutine(AttackCoolDown());
     }
     private IEnumerator AttackCoolDown()
     {
@@ -115,8 +137,22 @@ public class PlayerController : MonoBehaviour
     public void ToggleCrouch()
     {
         isCrouching = !isCrouching;
+        if(!isCrouching) UpdateColliderForCrouch(false);
         speed = isCrouching ? 2.5f : 5f;
         PlayerCanvasController.Instance.UpdateCrouchIcon(isCrouching);
+    }
+    private void UpdateColliderForCrouch(bool isCrouching)
+    {
+        if (isCrouching)
+        {
+            playerCollider.center = new Vector3(playerCollider.center.x, crouchColliderCenterY, playerCollider.center.z);
+            playerCollider.height = crouchColliderHeight;
+        }
+        else
+        {
+            playerCollider.center = new Vector3(playerCollider.center.x, originalColliderCenterY, playerCollider.center.z);
+            playerCollider.height = originalColliderHeight;
+        }
     }
     void FixedUpdate()
     {

@@ -1,10 +1,14 @@
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.AI;
+using Unity.VisualScripting;
 
 public class MeleeGuardController : GuardController
 {
+    [HideInInspector] public bool isPlayerOnAttackRange;
+    [SerializeField] private float attackCoolDown;
     private bool isReadyToAttack = false;
+    private bool isAttacking = false;
     [HideInInspector] public bool _isReadyToAttack
     { 
         get { return isReadyToAttack; } 
@@ -13,13 +17,9 @@ public class MeleeGuardController : GuardController
             if(isReadyToAttack != value)
             {
                 isReadyToAttack = value;
-                if(isReadyToAttack)
+                if(isReadyToAttack && !isAttacking && isPlayerOnAttackRange)
                 {
                     Attack();
-                }
-                else
-                {
-                    attackSequence.Kill();
                 }
             }
         }
@@ -28,6 +28,7 @@ public class MeleeGuardController : GuardController
     {
         base.Start();
         agent.stoppingDistance = 1.3f;
+        isPlayerOnAttackRange = false;
     }
     void LateUpdate()
     {
@@ -41,11 +42,13 @@ public class MeleeGuardController : GuardController
             }
             else
             {
-                guardState.state = GuardState.State.Running;
+                if(guardState.state != GuardState.State.Running)
+                {
+                    guardState.state = GuardState.State.Running;
+                }
             }
             agent.SetDestination(player.transform.position);
         }
-        Debug.Log("isReadyToAttack: " + isReadyToAttack);
     }
     public override void ChasePlayer()
     {
@@ -54,22 +57,33 @@ public class MeleeGuardController : GuardController
     }
     protected override void Attack()
     {
-        Debug.Log("Attack");
-        attackSequence = DOTween.Sequence();
-        attackSequence.AppendCallback(() =>
+        if(guardState.isDead) return;
+        guardState.state = GuardState.State.Punching;
+
+        if(guardState.isDead) return;
+        DOVirtual.DelayedCall(1f, () =>
         {
-            guardState.state = GuardState.State.Punching;
-            DOVirtual.DelayedCall(1.267f, () =>
+            if (isPlayerOnAttackRange)
             {
-                guardState.state = GuardState.State.WalkingBackward;
-                transform.DOMove(transform.position - Vector3.back, 0.867f)
-                    .SetLoops(2, LoopType.Incremental)
-                    .SetEase(Ease.Linear)
-                    .OnComplete(() =>
-                    {                    
-                        _isReadyToAttack = false;
-                    });
-            });
+                PlayerProperties.Instance.TakeDamage(10);
+            }
+        });
+
+        if(guardState.isDead) return;
+        DOVirtual.DelayedCall(1.267f, () =>
+        {
+            isAttacking = false;
+            _isReadyToAttack = false;
+            guardState.state = GuardState.State.FightIdle;
+        });
+
+        if(guardState.isDead) return;
+        DOVirtual.DelayedCall(1.267f + attackCoolDown, () =>
+        {
+            if(isPlayerOnAttackRange)
+            {
+                _isReadyToAttack = true;
+            }
         });
     }
 }

@@ -1,6 +1,13 @@
-// Chức năng: Objective hoàn thành khi Player bước vào vùng trigger.
-// Gán cho: Object trigger trong map, ví dụ Trigger_EnterHouse_B hoặc Trigger_AfterCamera.
-// Tham chiếu với: MissionObjective base class để set IsCompleted; MissionFlowManager kiểm tra objective này trong Required Objectives.
+// ============================================================================
+// MissionEnterTriggerObjective.cs
+// ============================================================================
+// Objective hoàn thành khi Player bước vào trigger.
+//
+// PERSISTENCE INTEGRATION:
+// - Nếu objective đã Completed trong save, trigger sẽ không kích hoạt lại.
+// - Restore chỉ áp dụng state, không gọi CompleteObjective().
+// ============================================================================
+
 using UnityEngine;
 
 [RequireComponent(typeof(Collider))]
@@ -15,7 +22,9 @@ public class MissionEnterTriggerObjective : MissionObjective
     private void Awake()
     {
         triggerCollider = GetComponent<Collider>();
-        triggerCollider.isTrigger = true;
+
+        if (triggerCollider != null)
+            triggerCollider.isTrigger = true;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -23,10 +32,35 @@ public class MissionEnterTriggerObjective : MissionObjective
         if (!IsPlayer(other))
             return;
 
+        MissionFlowManager flowManager =
+            FindAnyObjectByType<MissionFlowManager>();
+
+        if (flowManager != null &&
+            flowManager.IsPersistentRestoreInProgress)
+        {
+            return;
+        }
+
         CompleteObjective();
 
         if (disableGameObjectAfterComplete)
             gameObject.SetActive(false);
+    }
+
+    protected override void OnPersistentStateApplied(
+        bool completed)
+    {
+        if (!completed)
+            return;
+
+        if (disableGameObjectAfterComplete)
+        {
+            if (triggerCollider != null)
+                triggerCollider.enabled = false;
+
+            if (gameObject.activeSelf)
+                gameObject.SetActive(false);
+        }
     }
 
     private bool IsPlayer(Collider other)
@@ -34,8 +68,11 @@ public class MissionEnterTriggerObjective : MissionObjective
         if (other.CompareTag(playerTag))
             return true;
 
-        if (other.transform.root != null && other.transform.root.CompareTag(playerTag))
+        if (other.transform.root != null &&
+            other.transform.root.CompareTag(playerTag))
+        {
             return true;
+        }
 
         return false;
     }

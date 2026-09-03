@@ -32,4 +32,20 @@ public class DialogueLine
     [Header("Timing")]
     [Tooltip("Chờ thêm trước khi cho phép click qua line kế tiếp sau khi chữ đã hiện đầy đủ.")]
     public float waitAfterTypingBeforeContinue = 0f;
+
+    // =========================================================================
+    // Chức năng mới - Conversation Element Object Activation
+    // =========================================================================
+    // Hai list này được thêm ở CUỐI class để không làm thay đổi/ghi đè
+    // các field conversation/camera/typing/timing đã có trong từng element cũ.
+    [Header("Objects On Enter")]
+    [Tooltip(
+        "Khi line này bắt đầu, các Object trong list sẽ được SetActive(true)."
+    )]
+    public GameObject[] setActiveTrueOnEnter;
+
+    [Tooltip(
+        "Khi line này bắt đầu, các Object trong list sẽ được SetActive(false)."
+    )]
+    public GameObject[] setActiveFalseOnEnter;
 }

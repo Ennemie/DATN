@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 841bdc3d7f729cc4881b2cfb0fc2430b
+timeCreated: 1425503880
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 31711
+  packageName: Bodyguards
+  packageVersion: 1.2
+  assetPath: Assets/BodyGuards/Meshes/Materials/Screen.mat
+  uploadId: 58356

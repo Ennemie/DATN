@@ -153,6 +153,16 @@ public class MissionInteractObjective : MissionObjective
             return;
         }
 
+        // Chức năng mới:
+        // Khi Player bắt đầu thực hiện Mission Interaction, khóa locomotion
+        // và chuyển PlayerState sang Interacting để dùng animation Interacting.
+        // Tham chiếu: PlayerController, PlayerState.
+        if (PlayerController.Instance != null)
+            PlayerController.Instance.SetExternalActionLock(true);
+
+        if (PlayerState.Instance != null)
+            PlayerState.Instance.BeginInteracting();
+
         if (handlingRoutine != null)
             StopCoroutine(handlingRoutine);
 
@@ -220,6 +230,11 @@ public class MissionInteractObjective : MissionObjective
 
         HideSliderImmediate();
 
+        // Chức năng mới:
+        // Kết thúc animation Interacting và trả quyền điều khiển cho Player.
+        // Không tự thay đổi hệ thống interaction cũ của InteractController.
+        EndPlayerInteractionAnimation();
+
         if (disableGameObjectAfterComplete)
             gameObject.SetActive(false);
     }
@@ -239,8 +254,24 @@ public class MissionInteractObjective : MissionObjective
 
         HideSliderImmediate();
 
+        // Chức năng mới:
+        // Khi Player rời trigger hoặc interaction bị hủy, phải trả animation/state về locomotion.
+        EndPlayerInteractionAnimation();
+
         if (logDebug)
             Debug.Log("[MissionInteractObjective] Handling canceled: " + reason);
+    }
+
+    // Chức năng mới:
+    // Kết thúc trạng thái Interacting và mở lại quyền điều khiển Player.
+    // Tham chiếu: PlayerState.EndInteracting(), PlayerController.SetExternalActionLock().
+    private void EndPlayerInteractionAnimation()
+    {
+        if (PlayerState.Instance != null)
+            PlayerState.Instance.EndInteracting();
+
+        if (PlayerController.Instance != null)
+            PlayerController.Instance.SetExternalActionLock(false);
     }
 
     private void ShowPrompt()
@@ -499,6 +530,37 @@ public class MissionInteractObjective : MissionObjective
             return null;
 
         return foundObject.GetComponent<T>();
+    }
+
+    // =========================================================================
+    // SAVE SYSTEM INTEGRATION
+    // Khi Continue / checkpoint restore đánh dấu objective đã completed,
+    // không cho interaction UI / handling routine khởi động lại.
+    // =========================================================================
+    protected override void OnPersistentStateApplied(bool completed)
+    {
+        if (!completed)
+            return;
+
+        if (handlingRoutine != null)
+        {
+            StopCoroutine(handlingRoutine);
+            handlingRoutine = null;
+        }
+
+        isHandling = false;
+        playerInside = false;
+
+        // Chức năng mới:
+        // Nếu Continue / checkpoint restore xảy ra giữa lúc đang interaction,
+        // phải hủy trạng thái Interacting trước khi khóa object objective.
+        EndPlayerInteractionAnimation();
+
+        HideSliderImmediate();
+        HidePromptImmediate();
+
+        if (disableGameObjectAfterComplete)
+            gameObject.SetActive(false);
     }
 
     private bool IsPlayer(Collider other)

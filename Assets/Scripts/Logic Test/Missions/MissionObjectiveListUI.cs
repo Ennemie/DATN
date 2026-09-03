@@ -48,6 +48,13 @@ public class MissionObjectiveListUI : MonoBehaviour
 
     [Header("Options")]
     [SerializeField] private bool ignoreDuplicateObjectiveId = true;
+
+    [Tooltip(
+        "Nếu bật, Objective Completed có trong save cũng được dựng lại trên Canvas. " +
+        "Mặc định false để giữ behavior cũ: Completed item hoàn tất animation rồi rời active list."
+    )]
+    [SerializeField] private bool showCompletedObjectivesOnRestore = false;
+
     [SerializeField] private bool logDebug;
 
     private readonly List<MissionObjectiveListItemUI> activeItems = new List<MissionObjectiveListItemUI>();
@@ -160,6 +167,91 @@ public class MissionObjectiveListUI : MonoBehaviour
             Debug.Log("[MissionObjectiveListUI] Added objective clone: " + finalId + " / " + objectiveText);
     }
 
+    /// <summary>
+    /// Rebuild Canvas Objective List từ persistent Mission state.
+    ///
+    /// Không chạy popup New Objective.
+    /// Không dùng animation completion.
+    /// </summary>
+    public void RestoreFromPersistentState(
+        System.Collections.Generic.IList<MissionObjectiveSaveData> states)
+    {
+        ClearAllObjectives();
+
+        if (states == null)
+            return;
+
+        for (int i = 0; i < states.Count; i++)
+        {
+            MissionObjectiveSaveData state = states[i];
+
+            if (state == null ||
+                string.IsNullOrWhiteSpace(state.ObjectiveId))
+            {
+                continue;
+            }
+
+            if (state.State == MissionProgressState.Started)
+            {
+                if (!state.ShowInActiveList)
+                    continue;
+
+                AddObjective(
+                    state.ObjectiveId,
+                    ResolveRestoreText(state)
+                );
+
+                continue;
+            }
+
+            if (state.State ==
+                    MissionProgressState.Completed &&
+                state.ShowInActiveList &&
+                showCompletedObjectivesOnRestore)
+            {
+                AddObjective(
+                    state.ObjectiveId,
+                    ResolveRestoreText(state)
+                );
+
+                if (itemById.TryGetValue(
+                        state.ObjectiveId,
+                        out MissionObjectiveListItemUI item))
+                {
+                    item.MarkCompleted(
+                        completedTextColor
+                    );
+                }
+            }
+        }
+
+        RepositionItems(false);
+
+        if (logDebug)
+        {
+            Debug.Log(
+                "[MissionObjectiveListUI] Restored " +
+                activeItems.Count +
+                " objective UI item(s) from persistent state."
+            );
+        }
+    }
+
+    private string ResolveRestoreText(
+        MissionObjectiveSaveData state)
+    {
+        if (state == null)
+            return string.Empty;
+
+        if (!string.IsNullOrWhiteSpace(
+                state.DisplayText))
+        {
+            return state.DisplayText;
+        }
+
+        return state.ObjectiveId;
+    }
+
     public void CompleteObjective(string objectiveId)
     {
         if (string.IsNullOrWhiteSpace(objectiveId))
@@ -186,6 +278,9 @@ public class MissionObjectiveListUI : MonoBehaviour
 
     public void ClearAllObjectives()
     {
+        // Restore/scene reset must not leave old completion coroutines alive.
+        StopAllCoroutines();
+
         completingIds.Clear();
         itemById.Clear();
 
@@ -199,6 +294,50 @@ public class MissionObjectiveListUI : MonoBehaviour
 
         if (keepTemplateInactive && objectiveItemPrefab != null && objectiveItemPrefab.gameObject.scene.IsValid())
             objectiveItemPrefab.gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// Removes current active objectives that are NOT already playing their
+    /// completion animation.
+    ///
+    /// Used when MissionFlowManager moves to another element immediately after
+    /// an objective completed. The old completed row is kept alive so its
+    /// green + slide-out animation can finish normally.
+    /// </summary>
+    public void ClearNonCompletingObjectives()
+    {
+        itemById.Clear();
+
+        for (int i = activeItems.Count - 1; i >= 0; i--)
+        {
+            MissionObjectiveListItemUI item = activeItems[i];
+
+            if (item == null)
+            {
+                activeItems.RemoveAt(i);
+                continue;
+            }
+
+            if (completingIds.Contains(item.ObjectiveId))
+                continue;
+
+            Destroy(item.gameObject);
+            activeItems.RemoveAt(i);
+        }
+
+        // Rebuild dictionary for the rows whose completion animation is alive.
+        for (int i = 0; i < activeItems.Count; i++)
+        {
+            MissionObjectiveListItemUI item = activeItems[i];
+
+            if (item != null &&
+                !string.IsNullOrWhiteSpace(item.ObjectiveId))
+            {
+                itemById[item.ObjectiveId] = item;
+            }
+        }
+
+        RepositionItems(false);
     }
 
     private IEnumerator CompleteAndRemoveRoutine(string objectiveId, MissionObjectiveListItemUI item)

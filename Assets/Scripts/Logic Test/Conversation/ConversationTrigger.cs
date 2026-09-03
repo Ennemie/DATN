@@ -92,6 +92,31 @@ public class ConversationTrigger : MonoBehaviour
         isRunning = false;
     }
 
+    /// <summary>
+    /// Chức năng mới:
+    /// Reset runtime gate của ConversationTrigger để một ConversationTrigger
+    /// one-time có thể được kích hoạt lại sau Checkpoint restore.
+    ///
+    /// Tham chiếu:
+    /// - CheckpointManager: gọi khi object nằm trong Restore Active List.
+    /// - Dialogue/Checkpoint flow: không thay đổi Conversation Data.
+    ///
+    /// Điều chỉnh:
+    /// Chỉ reset runtime state, không thay đổi Conversation reference,
+    /// AfterConversationAction hoặc các thiết lập Inspector.
+    /// </summary>
+    public void ResetRuntimeTriggerState()
+    {
+        hasTriggered = false;
+        isRunning = false;
+
+        if (triggerCollider == null)
+            triggerCollider = GetComponent<Collider>();
+
+        if (triggerCollider != null)
+            triggerCollider.enabled = true;
+    }
+
     private void RunAfterConversationAction()
     {
         if (afterConversationAction == AfterConversationAction.None)
@@ -121,7 +146,7 @@ public class ConversationTrigger : MonoBehaviour
                 break;
 
             case AfterConversationAction.SaveCheckpointOnly:
-                missionFlowManager.SaveCheckpoint(checkpointPoint != null ? checkpointPoint : transform, checkpointId, checkpointMessage);
+               // missionFlowManager.SaveCheckpoint(checkpointPoint != null ? checkpointPoint : transform, checkpointId, checkpointMessage);
                 break;
         }
     }

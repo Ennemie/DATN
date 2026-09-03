@@ -55,6 +55,7 @@ public class DialogueController : MonoBehaviour
 
     public bool IsPlaying => conversationRoutine != null;
     public DialogueConversationData CurrentConversation => currentConversation;
+  
 
     private void Awake()
     {
@@ -218,6 +219,12 @@ public class DialogueController : MonoBehaviour
         isTypingLine = false;
         isWaitingForContinue = false;
 
+        // Chức năng mới:
+        // Mỗi DialogueLine là một Conversation Element. Khi line bắt đầu,
+        // áp dụng object activation/deactivation trước camera + typing.
+        // Các field cũ của DialogueLine không bị thay đổi.
+        ApplyConversationLineObjectState(line);
+
         if (dialogueUI != null)
         {
             dialogueUI.SetContinueHintVisible(false);
@@ -298,6 +305,70 @@ public class DialogueController : MonoBehaviour
             lastFinishReason = DialogueFinishReason.Skipped;
     }
 
+    /// <summary>
+    /// Chức năng mới:
+    /// Áp dụng hai list Object của từng Conversation Element.
+    ///
+    /// Tham chiếu:
+    /// - DialogueLine: dữ liệu hai list.
+    /// - ConversationTrigger: reset one-time runtime gate nếu được bật lại.
+    ///
+    /// Điều chỉnh:
+    /// - Inactive list chạy trước.
+    /// - Active list chạy sau.
+    /// - Không sửa các field khác của DialogueLine.
+    /// - Chỉ reset ConversationTrigger khi object nằm trong Active list.
+    /// </summary>
+    private void ApplyConversationLineObjectState(
+        DialogueLine line)
+    {
+        if (line == null)
+            return;
+
+        ApplyConversationObjectList(
+            line.setActiveFalseOnEnter,
+            false
+        );
+
+        ApplyConversationObjectList(
+            line.setActiveTrueOnEnter,
+            true
+        );
+    }
+
+    private void ApplyConversationObjectList(
+        GameObject[] objects,
+        bool active)
+    {
+        if (objects == null)
+            return;
+
+        for (int i = 0; i < objects.Length; i++)
+        {
+            GameObject target = objects[i];
+
+            if (target == null)
+                continue;
+
+            if (!active)
+            {
+                target.SetActive(false);
+                continue;
+            }
+
+            // Chức năng mới:
+            // Nếu line dùng để bật lại một ConversationTrigger one-time,
+            // reset runtime gate trước khi active.
+            ConversationTrigger conversationTrigger =
+                target.GetComponent<ConversationTrigger>();
+
+            if (conversationTrigger != null)
+                conversationTrigger.ResetRuntimeTriggerState();
+
+            target.SetActive(true);
+        }
+    }
+
     private IEnumerator RunLineCameraRoutine(DialogueLine line)
     {
         if (cameraDirector == null || line == null)
@@ -319,7 +390,7 @@ public class DialogueController : MonoBehaviour
 
             case DialogueCameraMode.CustomTarget:
                 if (line.customCameraTarget != null)
-                    yield return cameraDirector.MoveToTarget(line.customCameraTarget, line.cameraMoveTime);
+                    yield return cameraDirector.MoveToMovingTarget(line.customCameraTarget, line.cameraMoveTime);
                 yield break;
 
             case DialogueCameraMode.ReturnToPlayer:

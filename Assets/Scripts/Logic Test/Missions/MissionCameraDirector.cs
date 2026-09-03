@@ -29,24 +29,41 @@ public class MissionCameraDirector : MonoBehaviour
     private int cameraControlLockCount;
     private bool isMoving;
 
+    // Chỉ dùng cho DialogueLine.CameraMode = CustomTarget.
+    // Sau khi bay tới target, camera tiếp tục bám vị trí của target khi target di chuyển.
+    private Transform activeMovingCameraTarget;
+
     public bool IsCameraControlled => cameraControlLockCount > 0;
     public bool IsMoving => isMoving;
 
     private void Awake()
     {
         if (inputLockController == null)
-            inputLockController = FindFirstObjectByType<PlayerInputLockController>();
+            inputLockController = FindAnyObjectByType<PlayerInputLockController>();
     }
 
     private void LateUpdate()
     {
+        if (cameraFollowTarget == null)
+            return;
+
+        // Custom dialogue target: keep the camera focus position attached to the
+        // target after the initial camera move, even while camera control is locked.
+        if (activeMovingCameraTarget != null)
+        {
+            if (!isMoving)
+                cameraFollowTarget.position = activeMovingCameraTarget.position;
+
+            return;
+        }
+
         if (!keepFollowingPlayerWhenIdle)
             return;
 
         if (IsCameraControlled || isMoving)
             return;
 
-        if (cameraFollowTarget == null || playerTarget == null)
+        if (playerTarget == null)
             return;
 
         cameraFollowTarget.position = playerTarget.position + playerFollowOffset;
@@ -125,6 +142,7 @@ public class MissionCameraDirector : MonoBehaviour
 
         if (cameraControlLockCount == 0)
         {
+            activeMovingCameraTarget = null;
             SetControlledBehaviours(true);
             inputLockController?.Unlock(inputLockReason);
         }
@@ -138,13 +156,35 @@ public class MissionCameraDirector : MonoBehaviour
         if (targetPoint == null)
             yield break;
 
+        // Normal/static target movement should not continue following the target.
+        activeMovingCameraTarget = null;
         yield return MoveToPosition(targetPoint.position, duration);
+    }
+
+    // Dùng riêng cho DialogueLine.CameraMode = CustomTarget.
+    // Camera bay tới vị trí hiện tại của target rồi tiếp tục bám target khi target di chuyển.
+    public IEnumerator MoveToMovingTarget(Transform targetPoint, float duration)
+    {
+        if (targetPoint == null)
+            yield break;
+
+        activeMovingCameraTarget = null;
+
+        yield return MoveToPosition(targetPoint.position, duration);
+
+        if (targetPoint != null)
+        {
+            activeMovingCameraTarget = targetPoint;
+            cameraFollowTarget.position = targetPoint.position;
+        }
     }
 
     public IEnumerator ReturnToPlayer(float duration = -1f)
     {
         if (playerTarget == null)
             yield break;
+
+        activeMovingCameraTarget = null;
 
         float finalDuration = duration >= 0f ? duration : returnMoveTime;
         Vector3 playerPosition = playerTarget.position + playerFollowOffset;
@@ -156,6 +196,7 @@ public class MissionCameraDirector : MonoBehaviour
         if (cameraFollowTarget == null || playerTarget == null)
             return;
 
+        activeMovingCameraTarget = null;
         cameraFollowTarget.position = playerTarget.position + playerFollowOffset;
     }
 

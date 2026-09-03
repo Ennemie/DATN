@@ -63,6 +63,48 @@ public class MissionObjectiveUI : MonoBehaviour
 
     public void QueueObjective(string title, string objectiveId, string objectiveText, bool addToActiveList)
     {
+        MissionFlowManager flowManager =
+            FindAnyObjectByType<MissionFlowManager>();
+
+        if (flowManager != null &&
+            flowManager.IsPersistentRestoreInProgress)
+        {
+            if (logDebug)
+            {
+                Debug.Log(
+                    "[MissionObjectiveUI] Ignored objective popup while persistent restore is in progress.",
+                    this
+                );
+            }
+
+            return;
+        }
+
+        if (flowManager != null &&
+            !string.IsNullOrWhiteSpace(objectiveId))
+        {
+            GameDataManager dataManager =
+                GameDataManager.Instance;
+
+            if (dataManager != null &&
+                dataManager.HasValidSaveData &&
+                dataManager.Data.GetObjectiveState(
+                    objectiveId.Trim()
+                ) == MissionProgressState.Completed)
+            {
+                if (logDebug)
+                {
+                    Debug.Log(
+                        "[MissionObjectiveUI] Ignored popup for an already committed Completed objective: " +
+                        objectiveId,
+                        this
+                    );
+                }
+
+                return;
+            }
+        }
+
         if (string.IsNullOrWhiteSpace(objectiveText))
         {
             Debug.LogWarning("[MissionObjectiveUI] QueueObjective ignored because objectiveText is empty.");
@@ -81,6 +123,26 @@ public class MissionObjectiveUI : MonoBehaviour
 
         if (queueRoutine == null)
             queueRoutine = StartCoroutine(ProcessQueueRoutine());
+    }
+
+    /// <summary>
+    /// Clear popup requests that may have been queued by normal runtime flow
+    /// before Continue/checkpoint restore finished. Restore must rebuild the
+    /// Canvas directly from persistent data instead of replaying old popups.
+    /// </summary>
+    public void ClearPendingObjectivesForRestore()
+    {
+        if (queueRoutine != null)
+        {
+            StopCoroutine(queueRoutine);
+            queueRoutine = null;
+        }
+
+        queue.Clear();
+        isShowing = false;
+
+        if (objectiveRoot != null)
+            objectiveRoot.SetActive(false);
     }
 
     public IEnumerator WaitUntilIdle()

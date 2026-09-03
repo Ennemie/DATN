@@ -1,17 +1,36 @@
-// Chức năng: Checkpoint trigger độc lập; khi Player chạm vào thì lưu checkpoint gần nhất và hiện TMP CheckPoint một lần.
-// Dùng khi checkpoint không nằm trực tiếp trong MissionElement hoặc muốn checkpoint đặt tự do trong map.
-// Tham chiếu với: MissionFlowManager.SaveCheckpoint(); MissionFailManager sẽ dùng checkpoint này để respawn khi camera phát hiện hoặc player chết.
+// ============================================================================
+// MissionCheckpointTrigger.cs
+// ============================================================================
+// Compatibility checkpoint trigger.
+//
+// IMPORTANT:
+// - Checkpoint authority = CheckpointManager.
+// - Không còn lưu checkpoint trực tiếp vào MissionFailManager.
+// - Nếu project đã dùng MissionElementTrigger -> SaveCheckpointOnly thì
+//   script này không bắt buộc phải dùng.
+//
+// PERSISTENCE:
+// - CheckpointManager commit Map + Checkpoint.
+// - Khi Continue, CheckpointManager resolve lại Transform từ scene.
+// ============================================================================
+
 using UnityEngine;
 
 [RequireComponent(typeof(Collider))]
 public class MissionCheckpointTrigger : MonoBehaviour
 {
     [Header("Manager")]
-    [SerializeField] private MissionFlowManager missionFlowManager;
+    [SerializeField] private CheckpointManager checkpointManager;
+    [SerializeField] private MissionCheckpointToast checkpointToast;
 
     [Header("Checkpoint")]
+    [Min(1)]
+    [SerializeField] private int mapNumber = 1;
+
+    [Min(1)]
+    [SerializeField] private int checkpointNumber = 1;
+
     [SerializeField] private Transform checkpointPoint;
-    [SerializeField] private string checkpointId;
     [SerializeField] private string checkpointMessage = "Checkpoint";
 
     [Header("Trigger")]
@@ -22,9 +41,14 @@ public class MissionCheckpointTrigger : MonoBehaviour
     private bool hasTriggered;
     private Collider triggerCollider;
 
+    public int MapNumber => mapNumber;
+    public int CheckpointNumber => checkpointNumber;
+    public Transform CheckpointPoint => checkpointPoint;
+
     private void Reset()
     {
         Collider col = GetComponent<Collider>();
+
         if (col != null)
             col.isTrigger = true;
     }
@@ -32,8 +56,22 @@ public class MissionCheckpointTrigger : MonoBehaviour
     private void Awake()
     {
         triggerCollider = GetComponent<Collider>();
+
         if (triggerCollider != null)
             triggerCollider.isTrigger = true;
+
+        // Chức năng mới:
+        // Tìm CheckpointToast kể cả khi visual root của Toast đang inactive.
+        if (checkpointToast == null)
+        {
+            MissionCheckpointToast[] toasts = FindObjectsByType<MissionCheckpointToast>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None
+            );
+
+            if (toasts != null && toasts.Length > 0)
+                checkpointToast = toasts[0];
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -44,23 +82,72 @@ public class MissionCheckpointTrigger : MonoBehaviour
         if (!IsPlayer(other))
             return;
 
-        hasTriggered = true;
-
-        if (missionFlowManager == null)
-            missionFlowManager = FindFirstObjectByType<MissionFlowManager>();
-
-        if (missionFlowManager == null)
+        if (checkpointManager == null)
         {
-            Debug.LogWarning("[MissionCheckpointTrigger] Missing MissionFlowManager.", this);
+            checkpointManager =
+                FindAnyObjectByType<CheckpointManager>();
+        }
+
+        if (checkpointToast == null)
+        {
+            // Chức năng mới:
+            // Thử resolve lại ngay lúc trigger thực sự được kích hoạt, tránh phụ thuộc thứ tự Awake.
+            MissionCheckpointToast[] toasts = FindObjectsByType<MissionCheckpointToast>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None
+            );
+
+            if (toasts != null && toasts.Length > 0)
+                checkpointToast = toasts[0];
+        }
+
+        if (checkpointManager == null)
+        {
+            Debug.LogWarning(
+                "[MissionCheckpointTrigger] Missing CheckpointManager.",
+                this
+            );
             return;
         }
 
-        missionFlowManager.SaveCheckpoint(checkpointPoint != null ? checkpointPoint : transform, checkpointId, checkpointMessage);
+        Transform cp =
+            checkpointPoint != null
+                ? checkpointPoint
+                : transform;
+
+        string message =
+            string.IsNullOrWhiteSpace(checkpointMessage)
+                ? "Checkpoint"
+                : checkpointMessage;
+
+        bool accepted =
+            checkpointManager.ReachCheckpoint(
+                mapNumber,
+                checkpointNumber,
+                cp,
+                message
+            );
+
+        if (!accepted)
+            return;
+
+        hasTriggered = true;
+
+        // CŨ:
+        // if (checkpointToast != null)
+        //     checkpointToast.ShowCheckpoint(message);
+        //
+        // MỚI:
+        // CheckpointManager phát Toast sau khi commit thành công.
 
         if (disableAfterTriggered)
+        {
             gameObject.SetActive(false);
+        }
         else if (triggerCollider != null && oneTime)
+        {
             triggerCollider.enabled = false;
+        }
     }
 
     private bool IsPlayer(Collider other)
@@ -69,6 +156,8 @@ public class MissionCheckpointTrigger : MonoBehaviour
             return true;
 
         Transform root = other.transform.root;
-        return root != null && root.CompareTag(playerTag);
+
+        return root != null &&
+               root.CompareTag(playerTag);
     }
 }

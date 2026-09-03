@@ -34,6 +34,14 @@ public class DialogueUI : MonoBehaviour
 
     private Coroutine blinkRoutine;
 
+    void OnEnable()
+    {
+        PlayerCanvasController.Instance.ToggleObject(false);
+    }
+    void OnDisable()
+    {
+        PlayerCanvasController.Instance.ToggleObject(true);
+    }
     private void Awake()
     {
         if (root == null)
